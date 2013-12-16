@@ -40,7 +40,7 @@ auto_ptr<Sink> Logger::setDebugSink(auto_ptr<Sink> sink)
         return auto_ptr<Sink>(0);
     auto_ptr<Sink> r(debugSink);
     debugSink = sink.release();
-    debugSink->setPrefix("DEB");
+    debugSink->setPrefix("DEB ");
     return r;
 }
 // =========================================================================
@@ -55,7 +55,7 @@ auto_ptr<Sink> Logger::setInfoSink(auto_ptr<Sink> sink)
         return auto_ptr<Sink>(0);
     auto_ptr<Sink> ret(infoSink);
     infoSink = sink.release();
-    infoSink->setPrefix("INF");
+    infoSink->setPrefix("INF ");
     return ret;
 }
 // =========================================================================
@@ -70,7 +70,7 @@ auto_ptr<Sink> Logger::setWarnSink(auto_ptr<Sink> sink)
         return auto_ptr<Sink>(0);
     auto_ptr<Sink> ret(warnSink);
     warnSink = sink.release();
-    warnSink->setPrefix("WAR");
+    warnSink->setPrefix("WAR ");
     return ret;
 }
 // =========================================================================
@@ -85,7 +85,7 @@ auto_ptr<Sink> Logger::setErrorSink(auto_ptr<Sink> sink)
         return auto_ptr<Sink>(0);
     auto_ptr<Sink> ret(errorSink);
     errorSink = sink.release();
-    errorSink->setPrefix("ERR");
+    errorSink->setPrefix("ERR ");
     return ret;
 }
 

@@ -46,7 +46,7 @@ namespace slog
         ostream &strm = lockStream();
         strm<<prefix;
 #ifdef HAVE_KLUBOK
-        strm<<" TH"<<std::hex<<pthread_self()<<": ";
+        strm<<"TH"<<std::hex<<pthread_self()<<": ";
 #endif
         strm << value;
         strm<<endl;

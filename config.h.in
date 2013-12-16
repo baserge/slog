@@ -1,0 +1,9 @@
+#ifndef CONFIG_H_IN_BAL4UNAN
+#define CONFIG_H_IN_BAL4UNAN
+namespace slog
+{
+#cmakedefine UNIX
+#cmakedefine HAVE_KLUBOK
+#define VERSION "@VERSION@"
+} //namespace slog
+#endif /* end of include guard: CONFIG_H_IN_BAL4UNAN */

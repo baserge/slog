@@ -188,4 +188,14 @@ The dependencies of the package components are:
 
 API
 ===
-For API please refer to `here <doxy/index.html>`_.
+.. For API please refer to `here <doxy/index.html>`_.
+
+.. raw:: latex
+
+    {\scriptsize
+
+.. doxygenindex::
+
+.. raw:: latex
+
+    }

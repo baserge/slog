@@ -198,7 +198,7 @@ pngmath_dvipng_args = ["-D", "130"]
 #latex_use_modindex = True
 
 #doxygen produced files
-breathe_projects = { "Slog": "@CMAKE_CURRENT_BINARY_DIR@/doc/xml/" }
+breathe_projects = { "Slog": "@CMAKE_CURRENT_BINARY_DIR@/xml/" }
 breathe_default_project = "Slog"
 breathe_domain_by_extension = { "h" : "cpp", "hxx": "cpp", "cpp" : "cpp" }
 

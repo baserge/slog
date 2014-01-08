@@ -56,6 +56,7 @@ BOOST_AUTO_TEST_CASE(couter)
     logger.getInfoSink()<<"my message "<<2;
     logger.getWarnSink()<<"my message "<<3;
     logger.getErrorSink()<<"my message "<<4;
+    logger.getDebugSink()<<"my message "<<Logger::getTimeStamp()<<"message";
 }
 
 BOOST_AUTO_TEST_CASE(cerrer)

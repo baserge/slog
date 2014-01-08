@@ -41,6 +41,8 @@ namespace slog
             auto_ptr<Sink> setWarnSink(auto_ptr<Sink> sink);
             auto_ptr<Sink> setErrorSink(auto_ptr<Sink> sink);
 
+            static char *getTimeStamp();
+
         private:
             Sink *debugSink;
             Sink *infoSink;

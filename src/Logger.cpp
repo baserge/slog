@@ -5,6 +5,8 @@
 #include "config.h"
 #include "Logger.h"
 #include "Sink.h"
+#include <ctime>
+#include <cstring>
 using namespace slog;
 
 // =========================================================================
@@ -98,3 +100,13 @@ Logger &Logger::getLogger()
     return log;
 }
 
+// =========================================================================
+/// @brief Get UTC time stamp. Standard ascrime(gmtime()) with removed \n.
+// =========================================================================
+char *Logger::getTimeStamp()
+{
+    time_t now = time(0);
+    char *s = asctime(gmtime(&now));
+    s[strlen(s)-1] = ' ';
+    return s;
+}

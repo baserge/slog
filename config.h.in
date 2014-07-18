@@ -4,6 +4,6 @@ namespace slog
 {
 #cmakedefine UNIX
 #cmakedefine HAVE_KLUBOK
-#define VERSION "@VERSION@"
+    const char * const version = "@VERSION@";
 } //namespace slog
 #endif /* end of include guard: CONFIG_H_IN_BAL4UNAN */

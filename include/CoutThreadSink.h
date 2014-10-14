@@ -16,6 +16,8 @@ namespace slog
     // =========================================================================
     class CoutThreadSink : public Sink
     {
+        public:
+            virtual Sink *clone() const {return new CoutThreadSink;};
         protected:
             virtual ostream &lockStream();
             virtual void releaseStream();

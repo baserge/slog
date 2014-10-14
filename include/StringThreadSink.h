@@ -21,6 +21,7 @@ namespace slog
         public:
             ostringstream &getBuffer() {return buffer;};
             string getString() const {return buffer.str();};
+            virtual Sink *clone() const {return new StringThreadSink;};
 
         protected:
             virtual ostream &lockStream();

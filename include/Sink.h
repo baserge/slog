@@ -27,6 +27,7 @@ namespace slog
             const string &getPrefix() const {return prefix;};
             template<class T>
             Sink &operator<< (const T &value);
+            virtual Sink *clone() const = 0;
         protected:
             // =========================================================================
             /// @brief Lock the stream and if required and return it.

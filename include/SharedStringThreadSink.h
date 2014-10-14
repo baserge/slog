@@ -23,6 +23,8 @@ namespace slog
             SharedStringThreadSink(ostringstream &buffer, Mutex &mutex);
             const ostringstream &getBuffer() const {return buffer;};
             string getString() const {return buffer.str();};
+
+            virtual Sink *clone() const {return new SharedStringThreadSink(buffer, mutex);};
     
         protected:
             virtual ostream &lockStream();

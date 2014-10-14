@@ -10,7 +10,8 @@ using namespace std;
 // =========================================================================
 /// @brief Opens the file with the given name for logging.
 // =========================================================================
-FileThreadSink::FileThreadSink(const string &fileName) : file(fileName.c_str())
+FileThreadSink::FileThreadSink(const string &fileName) : file(fileName.c_str()),
+    fileName(fileName)
 {
     if (file.fail())
     {

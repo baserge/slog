@@ -41,6 +41,16 @@ namespace slog
             auto_ptr<Sink> setWarnSink(auto_ptr<Sink> sink);
             auto_ptr<Sink> setErrorSink(auto_ptr<Sink> sink);
 
+            enum LogLevel
+            {
+                NONE = 0,
+                ERROR = 1, // only error
+                WARN = 2, // error, warn
+                INFO = 3, // error, warn, info
+                DEBUG = 4 // error, warn, info, debug
+            };
+            void setLogLevel(LogLevel level, auto_ptr<Sink> sink);
+
             static char *getTimeStamp();
 
         private:

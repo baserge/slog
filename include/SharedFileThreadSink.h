@@ -23,6 +23,9 @@ namespace slog
             SharedFileThreadSink (const string &fileName, Mutex &mutex,
                                   long int sizeLimit = 1024*1024*1024);
             virtual ~SharedFileThreadSink ();
+            virtual Sink *clone() const {return new SharedFileThreadSink(fileName,
+                                                                         mutex,
+                                                                         sizeLimit);};
 
         protected:
             virtual ostream &lockStream();

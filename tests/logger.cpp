@@ -43,6 +43,11 @@ BOOST_AUTO_TEST_CASE(nuller)
     logger.getInfoSink()<<"my message "<<2<<2<<3<<4<<5;
     logger.getWarnSink()<<"my message "<<3<<2<<3<<4<<5;
     logger.getErrorSink()<<"my message "<<4<<2<<3<<4<<5;
+    logger.setLogLevel(Logger::NONE, auto_ptr<slog::Sink>(new CoutSink));
+    logger.getDebugSink()<<"my message "<<1<<2<<3<<4<<5;
+    logger.getInfoSink()<<"my message "<<2<<2<<3<<4<<5;
+    logger.getWarnSink()<<"my message "<<3<<2<<3<<4<<5;
+    logger.getErrorSink()<<"my message "<<4<<2<<3<<4<<5;
 }
 
 BOOST_AUTO_TEST_CASE(couter)
@@ -57,6 +62,16 @@ BOOST_AUTO_TEST_CASE(couter)
     logger.getWarnSink()<<"my message "<<3;
     logger.getErrorSink()<<"my message "<<4;
     logger.getDebugSink()<<"my message "<<Logger::getTimeStamp()<<"message";
+    logger.setLogLevel(Logger::NONE, auto_ptr<slog::Sink>(new CoutSink));
+    logger.getDebugSink()<<"my message (error if you see)"<<1<<2<<3<<4<<5;
+    logger.getInfoSink()<<"my message (error if you see)"<<2<<2<<3<<4<<5;
+    logger.getWarnSink()<<"my message (error if you see)"<<3<<2<<3<<4<<5;
+    logger.getErrorSink()<<"my message (error if you see)"<<4<<2<<3<<4<<5;
+    logger.setLogLevel(Logger::WARN, auto_ptr<slog::Sink>(new CoutSink));
+    logger.getDebugSink()<<"my message (error if you see)"<<1<<2<<3<<4<<5;
+    logger.getInfoSink()<<"my message (error if you see)"<<2<<2<<3<<4<<5;
+    logger.getWarnSink()<<"my message "<<3<<2<<3<<4<<5;
+    logger.getErrorSink()<<"my message "<<4<<2<<3<<4<<5;
 }
 
 BOOST_AUTO_TEST_CASE(cerrer)

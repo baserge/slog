@@ -18,6 +18,7 @@ namespace slog
         public:
             FileSink (const string &fileName, bool append = true);
             virtual ~FileSink () {file.close();};
+            virtual Sink *clone() const {return new FileSink(fileName, append);};
 
         protected:
             virtual ostream &lockStream() {return file;};
@@ -25,6 +26,8 @@ namespace slog
     
         private:
             ofstream file;
+            string fileName;
+            bool append;
     };
 } //namespace slog
 

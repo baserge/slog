@@ -7,7 +7,10 @@
 #include "Sink.h"
 #include <ctime>
 #include <cstring>
+#include <vector>
+#include <stdexcept>
 using namespace slog;
+using std::invalid_argument;
 
 // =========================================================================
 /// @brief Constructor.
@@ -38,11 +41,10 @@ Logger::~Logger()
 // =========================================================================
 auto_ptr<Sink> Logger::setDebugSink(auto_ptr<Sink> sink)
 {
-    if (!sink.get())
-        return auto_ptr<Sink>(0);
     auto_ptr<Sink> r(debugSink);
     debugSink = sink.release();
-    debugSink->setPrefix("DEB ");
+    if (debugSink)
+        debugSink->setPrefix("DEB ");
     return r;
 }
 // =========================================================================
@@ -53,11 +55,10 @@ auto_ptr<Sink> Logger::setDebugSink(auto_ptr<Sink> sink)
 // =========================================================================
 auto_ptr<Sink> Logger::setInfoSink(auto_ptr<Sink> sink)
 {
-    if (!sink.get())
-        return auto_ptr<Sink>(0);
     auto_ptr<Sink> ret(infoSink);
     infoSink = sink.release();
-    infoSink->setPrefix("INF ");
+    if (infoSink)
+       infoSink->setPrefix("INF ");
     return ret;
 }
 // =========================================================================
@@ -68,11 +69,10 @@ auto_ptr<Sink> Logger::setInfoSink(auto_ptr<Sink> sink)
 // =========================================================================
 auto_ptr<Sink> Logger::setWarnSink(auto_ptr<Sink> sink)
 {
-    if (!sink.get())
-        return auto_ptr<Sink>(0);
     auto_ptr<Sink> ret(warnSink);
     warnSink = sink.release();
-    warnSink->setPrefix("WAR ");
+    if (warnSink)
+        warnSink->setPrefix("WAR ");
     return ret;
 }
 // =========================================================================
@@ -83,11 +83,10 @@ auto_ptr<Sink> Logger::setWarnSink(auto_ptr<Sink> sink)
 // =========================================================================
 auto_ptr<Sink> Logger::setErrorSink(auto_ptr<Sink> sink)
 {
-    if (!sink.get())
-        return auto_ptr<Sink>(0);
     auto_ptr<Sink> ret(errorSink);
     errorSink = sink.release();
-    errorSink->setPrefix("ERR ");
+    if (errorSink)
+        errorSink->setPrefix("ERR ");
     return ret;
 }
 
@@ -109,4 +108,29 @@ char *Logger::getTimeStamp()
     char *s = asctime(gmtime(&now));
     s[strlen(s)-1] = ' ';
     return s;
+}
+
+typedef auto_ptr<Sink>(Logger::*func)(auto_ptr<Sink>);
+
+// =========================================================================
+/// @brief Set log level, with the same sink for all levels.
+// =========================================================================
+void Logger::setLogLevel(LogLevel level, auto_ptr<Sink> sink)
+{
+    func fs[4];
+    fs[0] = &Logger::setErrorSink;
+    fs[1] = &Logger::setWarnSink;
+    fs[2] = &Logger::setInfoSink;
+    fs[3] = &Logger::setDebugSink;
+    if (level > 4)
+        throw invalid_argument("unknown log level");
+    Sink *s = sink.release();
+    for (size_t i = 0; i < 4; i++)
+    {
+        if (i < level)
+            (this->*fs[i])(auto_ptr<Sink>(s->clone()));
+        else
+            (this->*fs[i])(auto_ptr<Sink>(0));
+    }
+    delete s;
 }

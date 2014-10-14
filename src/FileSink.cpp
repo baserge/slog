@@ -11,6 +11,7 @@ using namespace std;
 /// @brief Opens the file with the given name for logging.
 // =========================================================================
 FileSink::FileSink(const string &fileName, bool append)
+    : fileName(fileName), append(append)
 {
     if (append)
         file.open(fileName.c_str(), ios::app);

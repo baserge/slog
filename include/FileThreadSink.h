@@ -21,6 +21,7 @@ namespace slog
         public:
             FileThreadSink (const string &fileName);
             virtual ~FileThreadSink () {file.close();};
+            virtual Sink *clone() const {return new FileThreadSink(fileName);};
 
         protected:
             virtual ostream &lockStream();
@@ -29,6 +30,7 @@ namespace slog
         private:
             ofstream file;
             klubok::Mutex mutex;
+            string fileName;
     };
 } //namespace slog
 #endif

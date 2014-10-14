@@ -50,6 +50,7 @@ namespace slog
                 DEBUG = 4 // error, warn, info, debug
             };
             void setLogLevel(LogLevel level, auto_ptr<Sink> sink);
+            void setLogLevel(string level, auto_ptr<Sink> sink);
 
             static char *getTimeStamp();
 

@@ -134,3 +134,23 @@ void Logger::setLogLevel(LogLevel level, auto_ptr<Sink> sink)
     }
     delete s;
 }
+
+void Logger::setLogLevel(string level, auto_ptr<Sink> sink)
+{
+    LogLevel lv;
+    for (size_t i = 0; i < level.size(); i++)
+        level[i] = char(toupper(level[i]));
+    if (level == "NONE")
+        lv = NONE;
+    else if (level == "ERROR")
+        lv = ERROR;
+    else if (level == "WARN")
+        lv = WARN;
+    else if (level == "INFO")
+        lv = INFO;
+    else if (level == "DEBUG")
+        lv = DEBUG;
+    else
+        throw invalid_argument("unknown log level");
+    setLogLevel(lv, sink);
+}

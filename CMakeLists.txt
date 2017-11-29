@@ -15,7 +15,7 @@ set(DEFS -O2 -march=native
     -fomit-frame-pointer -falign-labels=1 -falign-jumps=1
     -funroll-loops  -finline-functions -Wall -Wextra
     -Wconversion -Wpointer-arith -Wcast-qual
-    -g)#0 -s)
+    -g -std=c++11)#0 -s)
 set(VERSION 0.1)
 set(LIB_TYPE SHARED) #SHARED STATIC MODULE
 # -- end settings

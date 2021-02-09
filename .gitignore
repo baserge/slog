@@ -1,0 +1,7 @@
+*.py[oc]
+*.sw[aop]
+tags
+!.gitignore
+build/
+dist/
+env/

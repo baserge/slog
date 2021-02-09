@@ -27,6 +27,21 @@ Logger::Logger()
 
 Logger::~Logger()
 {
+    // first check that pointers are indeed unique, otherwise we may double
+    // delete
+    if (debugSink == infoSink || debugSink == warnSink ||
+        debugSink == errorSink)
+    {
+        debugSink = nullptr;
+    }
+    if (infoSink == warnSink || infoSink == errorSink)
+    {
+        infoSink = nullptr;
+    }
+    if (warnSink == errorSink)
+    {
+        warnSink = nullptr;
+    }
     delete debugSink;
     delete infoSink;
     delete warnSink;

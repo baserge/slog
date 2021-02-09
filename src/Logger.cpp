@@ -9,6 +9,9 @@
 #include <cstring>
 #include <vector>
 #include <stdexcept>
+#ifdef HAVE_KLUBOK
+#include <Klubok/thread.h>
+#endif
 using namespace slog;
 using std::invalid_argument;
 
@@ -131,6 +134,10 @@ void Logger::setClonedSinks(const Logger *other)
 Logger &Logger::getLogger(const string &name)
 {
     static map<string, Logger*> instances;
+#ifdef HAVE_KLUBOK
+    static klubok::Mutex mutex;
+    mutex.lock();
+#endif
     if (!instances.count("")) // first check root logger is present
     {
         instances[""] = new Logger();
@@ -142,14 +149,18 @@ Logger &Logger::getLogger(const string &name)
         instances[name]->setClonedSinks(instances[""]);
         instances[name]->setInstancesMap(&instances);
     }
-    return *instances[name];
+    Logger *inst = instances[name];
+#ifdef HAVE_KLUBOK
+    mutex.unlock();
+#endif
+    return *inst;
 }
 
 // =========================================================================
 /// @brief Static method to delete all but root logger.
 //
 //  Be warned! This invalidates all references (including the calling),
-//  except that to the root logger.
+//  except that to the root logger. Also no thread safety is provided here.
 // =========================================================================
 void Logger::dropLoggers()
 {

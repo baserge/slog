@@ -39,9 +39,9 @@ Logger::~Logger()
 /// The new sink will be destroyed once not required. The old sink
 /// is returned.
 // =========================================================================
-auto_ptr<Sink> Logger::setDebugSink(auto_ptr<Sink> sink)
+unique_ptr<Sink> Logger::setDebugSink(unique_ptr<Sink> sink)
 {
-    auto_ptr<Sink> r(debugSink);
+    unique_ptr<Sink> r(debugSink);
     debugSink = sink.release();
     if (debugSink)
         debugSink->setPrefix("DEB ");
@@ -53,9 +53,9 @@ auto_ptr<Sink> Logger::setDebugSink(auto_ptr<Sink> sink)
 /// The new sink will be destroyed once not required. The old sink
 /// is returned.
 // =========================================================================
-auto_ptr<Sink> Logger::setInfoSink(auto_ptr<Sink> sink)
+unique_ptr<Sink> Logger::setInfoSink(unique_ptr<Sink> sink)
 {
-    auto_ptr<Sink> ret(infoSink);
+    unique_ptr<Sink> ret(infoSink);
     infoSink = sink.release();
     if (infoSink)
        infoSink->setPrefix("INF ");
@@ -67,9 +67,9 @@ auto_ptr<Sink> Logger::setInfoSink(auto_ptr<Sink> sink)
 /// The new sink will be destroyed once not required. The old sink
 /// is returned.
 // =========================================================================
-auto_ptr<Sink> Logger::setWarnSink(auto_ptr<Sink> sink)
+unique_ptr<Sink> Logger::setWarnSink(unique_ptr<Sink> sink)
 {
-    auto_ptr<Sink> ret(warnSink);
+    unique_ptr<Sink> ret(warnSink);
     warnSink = sink.release();
     if (warnSink)
         warnSink->setPrefix("WAR ");
@@ -81,9 +81,9 @@ auto_ptr<Sink> Logger::setWarnSink(auto_ptr<Sink> sink)
 /// The new sink will be destroyed once not required. The old sink
 /// is returned.
 // =========================================================================
-auto_ptr<Sink> Logger::setErrorSink(auto_ptr<Sink> sink)
+unique_ptr<Sink> Logger::setErrorSink(unique_ptr<Sink> sink)
 {
-    auto_ptr<Sink> ret(errorSink);
+    unique_ptr<Sink> ret(errorSink);
     errorSink = sink.release();
     if (errorSink)
         errorSink->setPrefix("ERR ");
@@ -110,12 +110,12 @@ char *Logger::getTimeStamp()
     return s;
 }
 
-typedef auto_ptr<Sink>(Logger::*func)(auto_ptr<Sink>);
+typedef unique_ptr<Sink>(Logger::*func)(unique_ptr<Sink>);
 
 // =========================================================================
 /// @brief Set log level, with the same sink for all levels.
 // =========================================================================
-void Logger::setLogLevel(LogLevel level, auto_ptr<Sink> sink)
+void Logger::setLogLevel(LogLevel level, unique_ptr<Sink> sink)
 {
     func fs[4];
     fs[0] = &Logger::setErrorSink;
@@ -128,14 +128,14 @@ void Logger::setLogLevel(LogLevel level, auto_ptr<Sink> sink)
     for (size_t i = 0; i < 4; i++)
     {
         if (i < level)
-            (this->*fs[i])(auto_ptr<Sink>(s->clone()));
+            (this->*fs[i])(unique_ptr<Sink>(s->clone()));
         else
-            (this->*fs[i])(auto_ptr<Sink>(0));
+            (this->*fs[i])(unique_ptr<Sink>());
     }
     delete s;
 }
 
-void Logger::setLogLevel(string level, auto_ptr<Sink> sink)
+void Logger::setLogLevel(string level, unique_ptr<Sink> sink)
 {
     LogLevel lv;
     for (size_t i = 0; i < level.size(); i++)
@@ -152,5 +152,5 @@ void Logger::setLogLevel(string level, auto_ptr<Sink> sink)
         lv = DEBUG;
     else
         throw invalid_argument("unknown log level");
-    setLogLevel(lv, sink);
+    setLogLevel(lv, std::move(sink));
 }

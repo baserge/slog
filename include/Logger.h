@@ -11,7 +11,7 @@
 
 namespace slog
 {
-    using std::auto_ptr;
+    using std::unique_ptr;
 
     // =========================================================================
     /// @brief Logger class.
@@ -36,10 +36,10 @@ namespace slog
             StreamBuffer getWarnSink() const {return StreamBuffer(warnSink);};
             StreamBuffer getErrorSink() const {return StreamBuffer(errorSink);};
             
-            auto_ptr<Sink> setDebugSink(auto_ptr<Sink> sink);
-            auto_ptr<Sink> setInfoSink(auto_ptr<Sink> sink);
-            auto_ptr<Sink> setWarnSink(auto_ptr<Sink> sink);
-            auto_ptr<Sink> setErrorSink(auto_ptr<Sink> sink);
+            unique_ptr<Sink> setDebugSink(unique_ptr<Sink> sink);
+            unique_ptr<Sink> setInfoSink(unique_ptr<Sink> sink);
+            unique_ptr<Sink> setWarnSink(unique_ptr<Sink> sink);
+            unique_ptr<Sink> setErrorSink(unique_ptr<Sink> sink);
 
             enum LogLevel
             {
@@ -49,8 +49,8 @@ namespace slog
                 INFO = 3, // error, warn, info
                 DEBUG = 4 // error, warn, info, debug
             };
-            void setLogLevel(LogLevel level, auto_ptr<Sink> sink);
-            void setLogLevel(string level, auto_ptr<Sink> sink);
+            void setLogLevel(LogLevel level, unique_ptr<Sink> sink);
+            void setLogLevel(string level, unique_ptr<Sink> sink);
 
             static char *getTimeStamp();
 

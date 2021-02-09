@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(nuller)
     logger.getInfoSink()<<"my message "<<2<<2<<3<<4<<5;
     logger.getWarnSink()<<"my message "<<3<<2<<3<<4<<5;
     logger.getErrorSink()<<"my message "<<4<<2<<3<<4<<5;
-    logger.setLogLevel(Logger::NONE, auto_ptr<slog::Sink>(new CoutSink));
+    logger.setLogLevel(Logger::NONE, unique_ptr<slog::Sink>(new CoutSink));
     logger.getDebugSink()<<"my message "<<1<<2<<3<<4<<5;
     logger.getInfoSink()<<"my message "<<2<<2<<3<<4<<5;
     logger.getWarnSink()<<"my message "<<3<<2<<3<<4<<5;
@@ -53,21 +53,21 @@ BOOST_AUTO_TEST_CASE(nuller)
 BOOST_AUTO_TEST_CASE(couter)
 {
     Logger &logger = Logger::getLogger();
-    logger.setDebugSink(auto_ptr<Sink>(new CoutSink));
-    logger.setInfoSink(auto_ptr<Sink>(new CoutSink));
-    logger.setWarnSink(auto_ptr<Sink>(new CoutSink));
-    logger.setErrorSink(auto_ptr<Sink>(new CoutSink));
+    logger.setDebugSink(unique_ptr<Sink>(new CoutSink));
+    logger.setInfoSink(unique_ptr<Sink>(new CoutSink));
+    logger.setWarnSink(unique_ptr<Sink>(new CoutSink));
+    logger.setErrorSink(unique_ptr<Sink>(new CoutSink));
     logger.getDebugSink()<<"my message "<<1;
     logger.getInfoSink()<<"my message "<<2;
     logger.getWarnSink()<<"my message "<<3;
     logger.getErrorSink()<<"my message "<<4;
     logger.getDebugSink()<<"my message "<<Logger::getTimeStamp()<<"message";
-    logger.setLogLevel(Logger::NONE, auto_ptr<slog::Sink>(new CoutSink));
+    logger.setLogLevel(Logger::NONE, unique_ptr<slog::Sink>(new CoutSink));
     logger.getDebugSink()<<"my message (error if you see)"<<1<<2<<3<<4<<5;
     logger.getInfoSink()<<"my message (error if you see)"<<2<<2<<3<<4<<5;
     logger.getWarnSink()<<"my message (error if you see)"<<3<<2<<3<<4<<5;
     logger.getErrorSink()<<"my message (error if you see)"<<4<<2<<3<<4<<5;
-    logger.setLogLevel(Logger::WARN, auto_ptr<slog::Sink>(new CoutSink));
+    logger.setLogLevel(Logger::WARN, unique_ptr<slog::Sink>(new CoutSink));
     logger.getDebugSink()<<"my message (error if you see)"<<1<<2<<3<<4<<5;
     logger.getInfoSink()<<"my message (error if you see)"<<2<<2<<3<<4<<5;
     logger.getWarnSink()<<"my message "<<3<<2<<3<<4<<5;
@@ -77,10 +77,10 @@ BOOST_AUTO_TEST_CASE(couter)
 BOOST_AUTO_TEST_CASE(cerrer)
 {
     Logger &logger = Logger::getLogger();
-    logger.setDebugSink(auto_ptr<Sink>(new CerrSink));
-    logger.setInfoSink(auto_ptr<Sink>(new CerrSink));
-    logger.setWarnSink(auto_ptr<Sink>(new CerrSink));
-    logger.setErrorSink(auto_ptr<Sink>(new CerrSink));
+    logger.setDebugSink(unique_ptr<Sink>(new CerrSink));
+    logger.setInfoSink(unique_ptr<Sink>(new CerrSink));
+    logger.setWarnSink(unique_ptr<Sink>(new CerrSink));
+    logger.setErrorSink(unique_ptr<Sink>(new CerrSink));
     logger.getDebugSink()<<"my message "<<1;
     logger.getInfoSink()<<"my message "<<2;
     logger.getWarnSink()<<"my message "<<3;
@@ -90,10 +90,10 @@ BOOST_AUTO_TEST_CASE(cerrer)
 BOOST_AUTO_TEST_CASE(file)
 {
     Logger &logger = Logger::getLogger();
-    logger.setDebugSink(auto_ptr<Sink>(new FileSink("shared.log", false)));
-    logger.setInfoSink(auto_ptr<Sink>(new FileSink("shared.log")));
-    logger.setWarnSink(auto_ptr<Sink>(new FileSink("shared.log")));
-    logger.setErrorSink(auto_ptr<Sink>(new FileSink("shared.log")));
+    logger.setDebugSink(unique_ptr<Sink>(new FileSink("shared.log", false)));
+    logger.setInfoSink(unique_ptr<Sink>(new FileSink("shared.log")));
+    logger.setWarnSink(unique_ptr<Sink>(new FileSink("shared.log")));
+    logger.setErrorSink(unique_ptr<Sink>(new FileSink("shared.log")));
     logger.getDebugSink()<<"my message "<<1;
     logger.getInfoSink()<<"my message "<<2;
     logger.getWarnSink()<<"my message "<<3;
@@ -109,10 +109,10 @@ BOOST_AUTO_TEST_CASE(file)
 BOOST_AUTO_TEST_CASE(strbuf_separate)
 {
     Logger &logger = Logger::getLogger();
-    logger.setDebugSink(auto_ptr<Sink>(new StringSink));
-    logger.setInfoSink(auto_ptr<Sink>(new StringSink));
-    logger.setWarnSink(auto_ptr<Sink>(new StringSink));
-    logger.setErrorSink(auto_ptr<Sink>(new StringSink));
+    logger.setDebugSink(unique_ptr<Sink>(new StringSink));
+    logger.setInfoSink(unique_ptr<Sink>(new StringSink));
+    logger.setWarnSink(unique_ptr<Sink>(new StringSink));
+    logger.setErrorSink(unique_ptr<Sink>(new StringSink));
     logger.getDebugSink()<<"my message "<<1;
     logger.getInfoSink()<<"my message "<<2;
     logger.getWarnSink()<<"my message "<<3;
@@ -147,10 +147,10 @@ BOOST_AUTO_TEST_CASE(strbuf_shared)
 {
     ostringstream buf;
     Logger &logger = Logger::getLogger();
-    logger.setDebugSink(auto_ptr<Sink>(new SharedStringSink(buf)));
-    logger.setInfoSink(auto_ptr<Sink>(new SharedStringSink(buf)));
-    logger.setWarnSink(auto_ptr<Sink>(new SharedStringSink(buf)));
-    logger.setErrorSink(auto_ptr<Sink>(new SharedStringSink(buf)));
+    logger.setDebugSink(unique_ptr<Sink>(new SharedStringSink(buf)));
+    logger.setInfoSink(unique_ptr<Sink>(new SharedStringSink(buf)));
+    logger.setWarnSink(unique_ptr<Sink>(new SharedStringSink(buf)));
+    logger.setErrorSink(unique_ptr<Sink>(new SharedStringSink(buf)));
     logger.getDebugSink()<<"my message "<<1;
     logger.getInfoSink()<<"my message "<<2;
     logger.getWarnSink()<<"my message "<<3;
@@ -250,10 +250,10 @@ BOOST_AUTO_TEST_CASE(coutThread)
 {
     srand(0);
     Logger &logger = Logger::getLogger();
-    logger.setDebugSink(auto_ptr<Sink>(new CoutThreadSink));
-    logger.setInfoSink(auto_ptr<Sink>(new CoutThreadSink));
-    logger.setWarnSink(auto_ptr<Sink>(new CoutThreadSink));
-    logger.setErrorSink(auto_ptr<Sink>(new CoutThreadSink));
+    logger.setDebugSink(unique_ptr<Sink>(new CoutThreadSink));
+    logger.setInfoSink(unique_ptr<Sink>(new CoutThreadSink));
+    logger.setWarnSink(unique_ptr<Sink>(new CoutThreadSink));
+    logger.setErrorSink(unique_ptr<Sink>(new CoutThreadSink));
     vector<AbstractJob*> jobs;
     for (size_t i = 0; i < 4; i++)
     {
@@ -270,10 +270,10 @@ BOOST_AUTO_TEST_CASE(cerrThread)
 {
     srand(0);
     Logger &logger = Logger::getLogger();
-    logger.setDebugSink(auto_ptr<Sink>(new CerrThreadSink));
-    logger.setInfoSink(auto_ptr<Sink>(new CerrThreadSink));
-    logger.setWarnSink(auto_ptr<Sink>(new CerrThreadSink));
-    logger.setErrorSink(auto_ptr<Sink>(new CerrThreadSink));
+    logger.setDebugSink(unique_ptr<Sink>(new CerrThreadSink));
+    logger.setInfoSink(unique_ptr<Sink>(new CerrThreadSink));
+    logger.setWarnSink(unique_ptr<Sink>(new CerrThreadSink));
+    logger.setErrorSink(unique_ptr<Sink>(new CerrThreadSink));
     vector<AbstractJob*> jobs;
     for (size_t i = 0; i < 4; i++)
     {
@@ -292,16 +292,16 @@ BOOST_AUTO_TEST_CASE(strbuf_shared_threaded)
     ostringstream buf;
     Mutex m;
     Logger &logger = Logger::getLogger();
-    logger.setDebugSink(auto_ptr<Sink>(new 
+    logger.setDebugSink(unique_ptr<Sink>(new 
                                        SharedStringThreadSink(buf, m)
                                        ));
-    logger.setInfoSink(auto_ptr<Sink>(new 
+    logger.setInfoSink(unique_ptr<Sink>(new 
                                       SharedStringThreadSink(buf, m)
                                       ));
-    logger.setWarnSink(auto_ptr<Sink>(new 
+    logger.setWarnSink(unique_ptr<Sink>(new 
                                       SharedStringThreadSink(buf, m)
                                       ));
-    logger.setErrorSink(auto_ptr<Sink>(new 
+    logger.setErrorSink(unique_ptr<Sink>(new 
                                        SharedStringThreadSink(buf, m)
                                        ));
     vector<AbstractJob*> jobs;
@@ -324,22 +324,22 @@ BOOST_AUTO_TEST_CASE(fileshared_threaded)
     remove("shared_threaded.log");
     Mutex m;
     Logger &logger = Logger::getLogger();
-    logger.setDebugSink(auto_ptr<Sink>(new 
+    logger.setDebugSink(unique_ptr<Sink>(new 
                                        SharedFileThreadSink(
                                                         "shared_threaded.log",
                                                         m)
                                        ));
-    logger.setInfoSink(auto_ptr<Sink>(new 
+    logger.setInfoSink(unique_ptr<Sink>(new 
                                       SharedFileThreadSink(
                                                        "shared_threaded.log",
                                                        m)
                                       ));
-    logger.setWarnSink(auto_ptr<Sink>(new 
+    logger.setWarnSink(unique_ptr<Sink>(new 
                                       SharedFileThreadSink(
                                                        "shared_threaded.log",
                                                        m)
                                       ));
-    logger.setErrorSink(auto_ptr<Sink>(new 
+    logger.setErrorSink(unique_ptr<Sink>(new 
                                        SharedFileThreadSink(
                                                         "shared_threaded.log",
                                                         m)
@@ -368,22 +368,22 @@ BOOST_AUTO_TEST_CASE(fileshared_threaded_trunc)
     remove("shared_threaded.log");
     Mutex m;
     Logger &logger = Logger::getLogger();
-    logger.setDebugSink(auto_ptr<Sink>(new 
+    logger.setDebugSink(unique_ptr<Sink>(new 
                                        SharedFileThreadSink(
                                                         "shared_threaded.log",
                                                         m, 1024)
                                        ));
-    logger.setInfoSink(auto_ptr<Sink>(new 
+    logger.setInfoSink(unique_ptr<Sink>(new 
                                       SharedFileThreadSink(
                                                        "shared_threaded.log",
                                                        m, 1024)
                                       ));
-    logger.setWarnSink(auto_ptr<Sink>(new 
+    logger.setWarnSink(unique_ptr<Sink>(new 
                                       SharedFileThreadSink(
                                                        "shared_threaded.log",
                                                        m, 1024)
                                       ));
-    logger.setErrorSink(auto_ptr<Sink>(new 
+    logger.setErrorSink(unique_ptr<Sink>(new 
                                        SharedFileThreadSink(
                                                         "shared_threaded.log",
                                                         m, 1024)

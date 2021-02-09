@@ -44,13 +44,13 @@ namespace slog
         public:
             static Logger &getLogger(const string &name = "");
             StreamBuffer getDebugSink() const
-            {return StreamBuffer(name, debugSink);};
+            {return StreamBuffer(name, debugSink, writeTime);};
             StreamBuffer getInfoSink() const
-            {return StreamBuffer(name, infoSink);};
+            {return StreamBuffer(name, infoSink, writeTime);};
             StreamBuffer getWarnSink() const
-            {return StreamBuffer(name, warnSink);};
+            {return StreamBuffer(name, warnSink, writeTime);};
             StreamBuffer getErrorSink() const
-            {return StreamBuffer(name, errorSink);};
+            {return StreamBuffer(name, errorSink, writeTime);};
             
             unique_ptr<Sink> setDebugSink(unique_ptr<Sink> sink);
             unique_ptr<Sink> setInfoSink(unique_ptr<Sink> sink);
@@ -67,14 +67,17 @@ namespace slog
             };
             void setLogLevel(LogLevel level, unique_ptr<Sink> sink);
             void setLogLevel(string level, unique_ptr<Sink> sink);
+            void setWriteTime(bool v) {writeTime = v;};
+            bool getWriteTime() const {return writeTime;};
 
             const string &getName() const {return name;};
 
-            static char *getTimeStamp();
+            static string getTimeStamp();
 
             void dropLoggers();
         private:
             string name;
+            bool writeTime;
             Sink *debugSink;
             Sink *infoSink;
             Sink *warnSink;

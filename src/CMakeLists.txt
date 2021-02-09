@@ -3,6 +3,7 @@
 # Licensed under GPLv3 or later, see the COPYING file.
 
 set(SRC Logger.cpp
+        StreamBuffer.cpp
         FileSink.cpp
         CoutThreadSink.cpp
         CerrThreadSink.cpp

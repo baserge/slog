@@ -45,9 +45,10 @@ namespace slog
     inline Sink &Sink::operator<< (const T &value)
     {
         ostream &strm = lockStream();
-        strm<<prefix;
+        if (!prefix.empty())
+            strm<<"["<<prefix<<"]";
 #ifdef HAVE_KLUBOK
-        strm<<"TH"<<std::hex<<pthread_self()<<": ";
+        strm<<"[TH"<<std::hex<<pthread_self()<<"]";
 #endif
         strm << value;
         strm<<endl;

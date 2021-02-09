@@ -40,6 +40,7 @@ BOOST_AUTO_TEST_CASE(nuller)
 {
     Logger &logger = Logger::getLogger();
     BOOST_REQUIRE_EQUAL(logger.getName(), "");
+    BOOST_REQUIRE_EQUAL(logger.getWriteTime(), false);
     logger.getDebugSink()<<"my message "<<1<<2<<3<<4<<5;
     logger.getInfoSink()<<"my message "<<2<<2<<3<<4<<5;
     logger.getWarnSink()<<"my message "<<3<<2<<3<<4<<5;

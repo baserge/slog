@@ -27,6 +27,7 @@ Logger::Logger(const string &name) : name(name)
     warnSink = nullptr;
     errorSink = nullptr;
     instances = nullptr;
+    writeTime = false;
 }
 
 Logger::~Logger()
@@ -59,7 +60,7 @@ unique_ptr<Sink> Logger::setDebugSink(unique_ptr<Sink> sink)
     unique_ptr<Sink> r(debugSink);
     debugSink = sink.release();
     if (debugSink)
-        debugSink->setPrefix("DEB ");
+        debugSink->setPrefix("DEB");
     return r;
 }
 // =========================================================================
@@ -75,7 +76,7 @@ unique_ptr<Sink> Logger::setInfoSink(unique_ptr<Sink> sink)
     unique_ptr<Sink> ret(infoSink);
     infoSink = sink.release();
     if (infoSink)
-       infoSink->setPrefix("INF ");
+       infoSink->setPrefix("INF");
     return ret;
 }
 // =========================================================================
@@ -91,7 +92,7 @@ unique_ptr<Sink> Logger::setWarnSink(unique_ptr<Sink> sink)
     unique_ptr<Sink> ret(warnSink);
     warnSink = sink.release();
     if (warnSink)
-        warnSink->setPrefix("WAR ");
+        warnSink->setPrefix("WAR");
     return ret;
 }
 // =========================================================================
@@ -107,7 +108,7 @@ unique_ptr<Sink> Logger::setErrorSink(unique_ptr<Sink> sink)
     unique_ptr<Sink> ret(errorSink);
     errorSink = sink.release();
     if (errorSink)
-        errorSink->setPrefix("ERR ");
+        errorSink->setPrefix("ERR");
     return ret;
 }
 
@@ -181,12 +182,12 @@ void Logger::dropLoggers()
 // =========================================================================
 /// @brief Get UTC time stamp. Standard ascrime(gmtime()) with removed \n.
 // =========================================================================
-char *Logger::getTimeStamp()
+string Logger::getTimeStamp()
 {
     time_t now = time(0);
-    char *s = asctime(gmtime(&now));
-    s[strlen(s)-1] = ' ';
-    return s;
+    char buffer[20];
+    strftime (buffer, 20, "%Y-%m-%d %H:%M:%S", gmtime(&now));
+    return string(buffer);
 }
 
 typedef unique_ptr<Sink>(Logger::*func)(unique_ptr<Sink>);

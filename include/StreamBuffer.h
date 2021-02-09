@@ -20,8 +20,8 @@ namespace slog
     class StreamBuffer
     {
         public:
-            StreamBuffer(const string &name, Sink *sink) :
-                name(name), sink(sink), strm(nullptr) {};
+            StreamBuffer(const string &name, Sink *sink, bool writeTime) :
+                name(name), sink(sink), writeTime(writeTime), strm(nullptr) {};
             ~StreamBuffer ()
             {
                 if (strm)
@@ -33,11 +33,14 @@ namespace slog
 
             template <class T>
             StreamBuffer &operator<<(const T &value);
-    
+
+
         private:
             const string &name;
             Sink *sink;
+            bool writeTime;
             ostringstream *strm;
+            void writeTimeStamp(ostringstream *strm);
     };
     template <class T>
     StreamBuffer &StreamBuffer::operator<<(const T &value)
@@ -47,9 +50,11 @@ namespace slog
             if (!strm)
             {
                 strm = new ostringstream;
-                *strm << name;
                 if (!name.empty())
-                    *strm << " ";
+                    *strm << "["<<name<<"]";
+                if (writeTime)
+                    writeTimeStamp(strm);
+                *strm << " ";
             }
             *strm << value;
         }

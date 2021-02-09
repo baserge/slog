@@ -9,8 +9,10 @@
 #include <cstring>
 #include <vector>
 #include <stdexcept>
+#include <map>
 using namespace slog;
 using std::invalid_argument;
+using std::map;
 
 // =========================================================================
 /// @brief Constructor.
@@ -112,8 +114,10 @@ unique_ptr<Sink> Logger::setErrorSink(unique_ptr<Sink> sink)
 // =========================================================================
 Logger &Logger::getLogger()
 {
-    static Logger log = Logger();
-    return log;
+    static map<string, Logger*> instances;
+    if (!instances.count("")) // instance not present -> create it
+        instances[""] = new Logger;
+    return *instances[""];
 }
 
 // =========================================================================

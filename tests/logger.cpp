@@ -144,6 +144,25 @@ BOOST_AUTO_TEST_CASE(strbuf_separate)
     BOOST_REQUIRE_EQUAL(num, 1);
 }
 
+BOOST_AUTO_TEST_CASE(named_loggers)
+{
+    Logger &l1 = Logger::getLogger();
+    l1.setDebugSink(unique_ptr<Sink>(new CoutSink));
+    Logger &l2 = Logger::getLogger("");
+    BOOST_REQUIRE_EQUAL(&l1, &l2);
+    Logger &l3 = Logger::getLogger("test1");
+    Logger &l4 = Logger::getLogger("test2");
+    BOOST_REQUIRE(&l1 != &l3);
+    BOOST_REQUIRE(&l3 != &l4);
+    l1.dropLoggers();
+    Logger &l31 = Logger::getLogger("test1");
+    Logger &l41 = Logger::getLogger("test2");
+    BOOST_REQUIRE(&l31 != &l3);
+    BOOST_REQUIRE(&l41 != &l4);
+    Logger &l32 = Logger::getLogger("test1");
+    BOOST_REQUIRE(&l31 == &l32);
+}
+
 BOOST_AUTO_TEST_CASE(strbuf_shared)
 {
     ostringstream buf;

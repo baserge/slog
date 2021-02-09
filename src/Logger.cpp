@@ -9,10 +9,8 @@
 #include <cstring>
 #include <vector>
 #include <stdexcept>
-#include <map>
 using namespace slog;
 using std::invalid_argument;
-using std::map;
 
 // =========================================================================
 /// @brief Constructor.
@@ -25,6 +23,7 @@ Logger::Logger(const string &name) : name(name)
     infoSink = nullptr;
     warnSink = nullptr;
     errorSink = nullptr;
+    instances = nullptr;
 }
 
 Logger::~Logger()
@@ -110,14 +109,62 @@ unique_ptr<Sink> Logger::setErrorSink(unique_ptr<Sink> sink)
 }
 
 // =========================================================================
+/// @brief Set this instance sinks by cloning those of the supplied instance.
+// =========================================================================
+void Logger::setClonedSinks(const Logger *other)
+{
+    if (!other)
+        return;
+    if (other->debugSink)
+        this->setDebugSink(unique_ptr<Sink>(other->debugSink->clone()));
+    if (other->infoSink)
+        this->setInfoSink(unique_ptr<Sink>(other->infoSink->clone()));
+    if (other->warnSink)
+        this->setWarnSink(unique_ptr<Sink>(other->warnSink->clone()));
+    if (other->errorSink)
+        this->setErrorSink(unique_ptr<Sink>(other->errorSink->clone()));
+}
+
+// =========================================================================
 /// @brief Static method to get a single Logger instance.
 // =========================================================================
-Logger &Logger::getLogger()
+Logger &Logger::getLogger(const string &name)
 {
     static map<string, Logger*> instances;
-    if (!instances.count("")) // instance not present -> create it
-        instances[""] = new Logger;
-    return *instances[""];
+    if (!instances.count("")) // first check root logger is present
+    {
+        instances[""] = new Logger();
+        instances[""]->setInstancesMap(&instances);
+    }
+    if (!instances.count(name)) // instance not present -> create it
+    {
+        instances[name] = new Logger(name);
+        instances[name]->setClonedSinks(instances[""]);
+        instances[name]->setInstancesMap(&instances);
+    }
+    return *instances[name];
+}
+
+// =========================================================================
+/// @brief Static method to delete all but root logger.
+//
+//  Be warned! This invalidates all references (including the calling),
+//  except that to the root logger.
+// =========================================================================
+void Logger::dropLoggers()
+{
+    if (!instances)
+        return;
+    for(auto it = instances->begin(); it != instances->end(); )
+    {
+        if (it->first != "")  // first is key
+        {
+            delete it->second;  // second is value
+            it = instances->erase(it);  // iterator to the next is returned
+        }
+        else
+            ++it;
+    }
 }
 
 // =========================================================================

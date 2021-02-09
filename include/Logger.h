@@ -9,30 +9,40 @@
 #include "StreamBuffer.h"
 #include <memory>
 #include <string>
+#include <map>
 
 namespace slog
 {
     using std::unique_ptr;
     using std::string;
+    using std::map;
 
     // =========================================================================
     /// @brief Logger class.
     //
-    // Logger class is a singleton created at the first call to getLogget().
-    // With a Logger instance one can log messages to 4 sinks: debug, information,
-    // warning and error. By default they all are set to a null sink, i.e. do not
+    // Loggers are named and can be created with the static method
+    // getLogger(). They are created only once (on the first request).
+    // If no name is supplied, this method returns the root logger.
+    //
+    // With a Logger instance one can log messages to 4 sinks: debug, info,
+    // warn and error. By default they all are set to a null sink, i.e. do not
     // log anything. To change this use a corresponding setSink method.
     // Afterwards to log a debug message simply do:
-    // Logget::getLogger().getDebugSink()<<"my messages". It is up to a sink
+    // Logger::getLogger().getDebugSink()<<"my messages". It is up to a sink
     // implementation to provide support of terminal output, strings, files,
     // thread safety etc.
     //
-    // Note that the logger will try to delete the set sinks.
+    // It is possible to set different sinks to different loggers. Note, that
+    // initially sinks for named loggers are copied from the root logger. But
+    // after the first use, named loggers will not be affected by changes to the
+    // root logger.
+    //
+    // Note that Loggers will delete their sinks.
     // =========================================================================
     class Logger
     {
         public:
-            static Logger &getLogger();
+            static Logger &getLogger(const string &name = "");
             StreamBuffer getDebugSink() const
             {return StreamBuffer(name, debugSink);};
             StreamBuffer getInfoSink() const
@@ -62,14 +72,18 @@ namespace slog
 
             static char *getTimeStamp();
 
+            void dropLoggers();
         private:
             string name;
             Sink *debugSink;
             Sink *infoSink;
             Sink *warnSink;
             Sink *errorSink;
+            map<string, Logger*> *instances;
             Logger(const string &name = "");
             ~Logger();
+            void setClonedSinks(const Logger *other);
+            void setInstancesMap(map<string, Logger*> *v) {instances = v;};
     };
 } //namespace slog
 

@@ -18,7 +18,7 @@ namespace slog
     class StreamBuffer
     {
         public:
-            StreamBuffer(Sink *sink) : sink(sink), strm(0) {};
+            StreamBuffer(Sink *sink) : sink(sink), strm(nullptr) {};
             ~StreamBuffer ()
             {
                 if (strm)

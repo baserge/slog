@@ -19,10 +19,10 @@ using std::invalid_argument;
 // =========================================================================
 Logger::Logger()
 {
-    debugSink = 0;
-    infoSink = 0;
-    warnSink = 0;
-    errorSink = 0;
+    debugSink = nullptr;
+    infoSink = nullptr;
+    warnSink = nullptr;
+    errorSink = nullptr;
 }
 
 Logger::~Logger()

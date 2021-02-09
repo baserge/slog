@@ -56,6 +56,8 @@ Logger::~Logger()
 // =========================================================================
 unique_ptr<Sink> Logger::setDebugSink(unique_ptr<Sink> sink)
 {
+    if (sink.get() == debugSink)
+        return unique_ptr<Sink>();
     unique_ptr<Sink> r(debugSink);
     debugSink = sink.release();
     if (debugSink)
@@ -70,6 +72,8 @@ unique_ptr<Sink> Logger::setDebugSink(unique_ptr<Sink> sink)
 // =========================================================================
 unique_ptr<Sink> Logger::setInfoSink(unique_ptr<Sink> sink)
 {
+    if (sink.get() == infoSink)
+        return unique_ptr<Sink>();
     unique_ptr<Sink> ret(infoSink);
     infoSink = sink.release();
     if (infoSink)
@@ -84,6 +88,8 @@ unique_ptr<Sink> Logger::setInfoSink(unique_ptr<Sink> sink)
 // =========================================================================
 unique_ptr<Sink> Logger::setWarnSink(unique_ptr<Sink> sink)
 {
+    if (sink.get() == warnSink)
+        return unique_ptr<Sink>();
     unique_ptr<Sink> ret(warnSink);
     warnSink = sink.release();
     if (warnSink)
@@ -98,6 +104,8 @@ unique_ptr<Sink> Logger::setWarnSink(unique_ptr<Sink> sink)
 // =========================================================================
 unique_ptr<Sink> Logger::setErrorSink(unique_ptr<Sink> sink)
 {
+    if (sink.get() == errorSink)
+        return unique_ptr<Sink>();
     unique_ptr<Sink> ret(errorSink);
     errorSink = sink.release();
     if (errorSink)

@@ -19,7 +19,7 @@ using std::map;
 //
 // All sinks are set to null.
 // =========================================================================
-Logger::Logger()
+Logger::Logger(const string &name) : name(name)
 {
     debugSink = nullptr;
     infoSink = nullptr;

@@ -8,10 +8,12 @@
 #include "Sink.h"
 #include "StreamBuffer.h"
 #include <memory>
+#include <string>
 
 namespace slog
 {
     using std::unique_ptr;
+    using std::string;
 
     // =========================================================================
     /// @brief Logger class.
@@ -31,10 +33,14 @@ namespace slog
     {
         public:
             static Logger &getLogger();
-            StreamBuffer getDebugSink() const {return StreamBuffer(debugSink);};
-            StreamBuffer getInfoSink() const {return StreamBuffer(infoSink);};
-            StreamBuffer getWarnSink() const {return StreamBuffer(warnSink);};
-            StreamBuffer getErrorSink() const {return StreamBuffer(errorSink);};
+            StreamBuffer getDebugSink() const
+            {return StreamBuffer(name, debugSink);};
+            StreamBuffer getInfoSink() const
+            {return StreamBuffer(name, infoSink);};
+            StreamBuffer getWarnSink() const
+            {return StreamBuffer(name, warnSink);};
+            StreamBuffer getErrorSink() const
+            {return StreamBuffer(name, errorSink);};
             
             unique_ptr<Sink> setDebugSink(unique_ptr<Sink> sink);
             unique_ptr<Sink> setInfoSink(unique_ptr<Sink> sink);
@@ -52,14 +58,17 @@ namespace slog
             void setLogLevel(LogLevel level, unique_ptr<Sink> sink);
             void setLogLevel(string level, unique_ptr<Sink> sink);
 
+            const string &getName() const {return name;};
+
             static char *getTimeStamp();
 
         private:
+            string name;
             Sink *debugSink;
             Sink *infoSink;
             Sink *warnSink;
             Sink *errorSink;
-            Logger();
+            Logger(const string &name = "");
             ~Logger();
     };
 } //namespace slog

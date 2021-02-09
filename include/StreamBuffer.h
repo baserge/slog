@@ -5,9 +5,11 @@
 #define STREAMBUFFER_H_D1JCYNSW
 #include "Sink.h"
 #include <sstream>
+#include <string>
 namespace slog
 {
     using std::ostringstream;
+    using std::string;
     // =========================================================================
     /// @brief Temporary object to combine messages.
     //
@@ -18,7 +20,8 @@ namespace slog
     class StreamBuffer
     {
         public:
-            StreamBuffer(Sink *sink) : sink(sink), strm(nullptr) {};
+            StreamBuffer(const string &name, Sink *sink) :
+                name(name), sink(sink), strm(nullptr) {};
             ~StreamBuffer ()
             {
                 if (strm)
@@ -32,6 +35,7 @@ namespace slog
             StreamBuffer &operator<<(const T &value);
     
         private:
+            const string &name;
             Sink *sink;
             ostringstream *strm;
     };
@@ -41,7 +45,12 @@ namespace slog
         if (sink)
         {
             if (!strm)
+            {
                 strm = new ostringstream;
+                *strm << name;
+                if (!name.empty())
+                    *strm << " ";
+            }
             *strm << value;
         }
         return *this;

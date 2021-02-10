@@ -1,5 +1,3 @@
-# CMakeLists.txt - cmake file, part of Slog.
-# Copyright 2013 Sergey Bozhenkov, boz at ipp.mpg.de
 # Licensed under GPLv3 or later, see the COPYING file.
 cmake_minimum_required(VERSION 3.0)
 project(Slog VERSION 0.2.0)

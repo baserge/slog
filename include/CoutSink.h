@@ -1,5 +1,3 @@
-// CoutSink.h - CoutSink class, part of Slog.
-// Copyright 2013 Sergey Bozhenkov, boz at ipp.mpg.de
 // Licensed under GPLv3 or later, see the COPYING file.
 #ifndef COUTSINK_H_LHCHBLUO
 #define COUTSINK_H_LHCHBLUO

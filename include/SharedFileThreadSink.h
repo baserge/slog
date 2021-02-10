@@ -1,5 +1,3 @@
-// SharedFileThreadSink.h - SharedFileThreadSink class, part of Slog.
-// Copyright 2013 Sergey Bozhenkov, boz at ipp.mpg.de
 // Licensed under GPLv3 or later, see the COPYING file.
 #ifndef SHAREDFILETHREADSINK_H_J26GGQKH
 #define SHAREDFILETHREADSINK_H_J26GGQKH

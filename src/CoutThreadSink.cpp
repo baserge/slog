@@ -5,13 +5,3 @@
 using namespace slog;
 
 std::mutex CoutThreadSink::mutex;
-
-ostream &CoutThreadSink::lockStream()
-{
-    mutex.lock();
-    return cout;
-}
-void CoutThreadSink::releaseStream()
-{
-    mutex.unlock();
-}

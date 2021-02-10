@@ -3,7 +3,6 @@
 // Licensed under GPLv3 or later, see the COPYING file.
 #ifndef COUTTHREADSINK_H_J26GGQKH
 #define COUTTHREADSINK_H_J26GGQKH
-#include "config.h"
 #include "Sink.h"
 #include <mutex>
 #include <iostream>
@@ -18,8 +17,8 @@ namespace slog
         public:
             virtual Sink *clone() const {return new CoutThreadSink;};
         protected:
-            virtual ostream &lockStream();
-            virtual void releaseStream();
+            virtual std::mutex* getMutex() {return &mutex;};
+            virtual ostream &getStream() {return cout;};
 
         private:
             static std::mutex mutex;

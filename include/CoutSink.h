@@ -15,9 +15,8 @@ namespace slog
         public:
             virtual Sink *clone() const {return new CoutSink;};
         protected:
-            virtual ostream &lockStream(){return cout;}
-            virtual void releaseStream() {};
-    
+            virtual std::mutex* getMutex() {return nullptr;};
+            virtual ostream &getStream() {return cout;};
     };
 } //namespace slog
 

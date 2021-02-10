@@ -3,7 +3,6 @@
 // Licensed under GPLv3 or later, see the COPYING file.
 #ifndef SHAREDFILETHREADSINK_H_J26GGQKH
 #define SHAREDFILETHREADSINK_H_J26GGQKH
-#include "config.h"
 #include "Sink.h"
 #include <mutex>
 #include <fstream>
@@ -26,8 +25,8 @@ namespace slog
                                                                          sizeLimit);};
 
         protected:
-            virtual ostream &lockStream();
-            virtual void releaseStream();
+            virtual std::mutex* getMutex() {rollOver(); return &mutex;};
+            virtual ostream &getStream() {return file;};
 
         private:
             string fileName;

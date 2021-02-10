@@ -3,7 +3,6 @@
 // Licensed under GPLv3 or later, see the COPYING file.
 #ifndef FILETHREADSINK_H_J26GGQKH
 #define FILETHREADSINK_H_J26GGQKH
-#include "config.h"
 #include "Sink.h"
 #include <mutex>
 #include <fstream>
@@ -28,8 +27,8 @@ namespace slog
             virtual Sink *clone() const {return new FileThreadSink(fileName);};
 
         protected:
-            virtual ostream &lockStream();
-            virtual void releaseStream();
+            virtual std::mutex* getMutex() {return &mutex;};
+            virtual ostream &getStream() {return file;};
 
         private:
             ofstream file;

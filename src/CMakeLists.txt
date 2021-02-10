@@ -7,10 +7,8 @@ set(SRC Logger.cpp
         FileSink.cpp
         CoutThreadSink.cpp
         CerrThreadSink.cpp
-        StringThreadSink.cpp
         FileThreadSink.cpp
-        SharedFileThreadSink.cpp
-        SharedStringThreadSink.cpp)
+        SharedFileThreadSink.cpp)
 
 
 add_library(slog ${LIB_TYPE} ${SRC})

@@ -32,22 +32,12 @@ SharedFileThreadSink::~SharedFileThreadSink()
     file.close();
 }
 
-ostream &SharedFileThreadSink::lockStream()
-{
-    mutex.lock();
-    rollOver();
-    return file;
-}
-void SharedFileThreadSink::releaseStream()
-{
-    mutex.unlock();
-}
-
 // =========================================================================
 /// @brief Start writing file from the beginning if the size is exceeded.
 // =========================================================================
 void SharedFileThreadSink::rollOver()
 {
+    const std::lock_guard<std::mutex> lock(mutex);
     if (file.tellp() > sizeLimit)
     {
         // iostream mess, there is not clean way of truncating files?

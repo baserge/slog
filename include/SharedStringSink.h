@@ -21,10 +21,10 @@ namespace slog
             string getString() const {return buffer.str();};
 
             virtual Sink *clone() const {return new SharedStringSink(buffer);};
-    
+
         protected:
-            virtual ostream &lockStream() {return buffer;};
-            virtual void releaseStream() {};
+            virtual std::mutex* getMutex() {return nullptr;};
+            virtual ostream &getStream() {return buffer;};
 
         private:
             ostringstream &buffer;

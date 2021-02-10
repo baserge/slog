@@ -23,8 +23,8 @@ namespace slog
             virtual Sink *clone() const {return new StringThreadSink;};
 
         protected:
-            virtual ostream &lockStream();
-            virtual void releaseStream();
+            virtual std::mutex* getMutex() {return &mutex;};
+            virtual ostream &getStream() {return buffer;};
 
         private:
             ostringstream buffer;

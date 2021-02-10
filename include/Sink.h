@@ -7,6 +7,7 @@
 #include <ostream>
 #include <string>
 #include <thread>
+#include <mutex>
 
 namespace slog
 {
@@ -27,28 +28,38 @@ namespace slog
             Sink &operator<< (const T &value);
             virtual Sink *clone() const = 0;
         protected:
-            // =========================================================================
-            /// @brief Lock the stream and if required and return it.
-            // =========================================================================
-            virtual ostream &lockStream() = 0;
-            // =========================================================================
-            /// @brief Unlock stream, if applicable.
-            // =========================================================================
-            virtual void releaseStream() = 0;
+            // return mutex for sink locking, can be null if not used by sink
+            virtual std::mutex* getMutex() = 0;
+            // return underlying stream for writing data
+            virtual ostream &getStream() = 0;
         private:
             string prefix;
+            template<class T>
+            void output(const T &value, ostream &strm);
     };
 
     template<class T>
-    inline Sink &Sink::operator<< (const T &value)
+    void Sink::output(const T &value, ostream &strm)
     {
-        ostream &strm = lockStream();
         if (!prefix.empty())
             strm<<"["<<prefix<<"]";
         strm<<"[TH"<<std::hex<<std::this_thread::get_id()<<"]";
         strm << value;
         strm<<endl;
-        releaseStream();
+    }
+
+    template<class T>
+    inline Sink &Sink::operator<< (const T &value)
+    {
+        std::mutex *mutex = getMutex();
+        ostream &strm = getStream();
+        if (mutex)
+        {
+            const std::lock_guard<std::mutex> lock(*mutex);
+            output(value, strm);
+        }
+        else
+            output(value, strm);
         return *this;
     }
 } //namespace slog

@@ -18,15 +18,16 @@ namespace slog
     class SharedStringThreadSink : public Sink
     {
         public:
-            SharedStringThreadSink(ostringstream &buffer, std::mutex &mutex);
+            SharedStringThreadSink(ostringstream &buffer, std::mutex &mutex) :
+            buffer(buffer), mutex(mutex) {};
             const ostringstream &getBuffer() const {return buffer;};
             string getString() const {return buffer.str();};
 
             virtual Sink *clone() const {return new SharedStringThreadSink(buffer, mutex);};
 
         protected:
-            virtual ostream &lockStream();
-            virtual void releaseStream();
+            virtual std::mutex* getMutex() {return &mutex;};
+            virtual ostream &getStream() {return buffer;};
 
         private:
             ostringstream &buffer;

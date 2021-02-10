@@ -9,15 +9,15 @@ namespace slog
 {
     using std::cerr;
     // =========================================================================
-    /// @brief Error to the standard error stream.
+    /// @brief Message to the standard error stream.
     // =========================================================================
     class CerrSink : public Sink
     {
         public:
             virtual Sink *clone() const {return new CerrSink;};
         protected:
-            virtual ostream &lockStream(){return cerr;}
-            virtual void releaseStream() {};
+            virtual std::mutex* getMutex() {return nullptr;};
+            virtual ostream &getStream() {return cerr;};
     };
 } //namespace slog
 

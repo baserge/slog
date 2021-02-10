@@ -20,13 +20,3 @@ FileThreadSink::FileThreadSink(const string &fileName) : file(fileName.c_str()),
         throw invalid_argument(strm.str().c_str());
     }
 }
-
-ostream &FileThreadSink::lockStream()
-{
-    mutex.lock();
-    return file;
-}
-void FileThreadSink::releaseStream()
-{
-    mutex.unlock();
-}

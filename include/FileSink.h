@@ -4,7 +4,7 @@
 #ifndef FILESINK_H_2HKGDFLO
 #define FILESINK_H_2HKGDFLO
 #include "Sink.h"
-#include <fstream> 
+#include <fstream>
 #include <string>
 namespace slog
 {
@@ -21,9 +21,9 @@ namespace slog
             virtual Sink *clone() const {return new FileSink(fileName, append);};
 
         protected:
-            virtual ostream &lockStream() {return file;};
-            virtual void releaseStream() {};
-    
+            virtual std::mutex* getMutex() {return nullptr;};
+            virtual ostream &getStream() {return file;};
+
         private:
             ofstream file;
             string fileName;

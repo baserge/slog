@@ -5,6 +5,7 @@
 #ifndef LOGGER_H_C68YIU4S
 #define LOGGER_H_C68YIU4S
 
+#include "Header.h"
 #include "Sink.h"
 #include "StreamBuffer.h"
 #include <memory>
@@ -44,13 +45,13 @@ namespace slog
         public:
             static Logger &getLogger(const string &name = "");
             StreamBuffer getDebugSink() const
-            {return StreamBuffer(name, debugSink, writeTime);};
+            {return StreamBuffer(debugSink, debugHeader);};
             StreamBuffer getInfoSink() const
-            {return StreamBuffer(name, infoSink, writeTime);};
+            {return StreamBuffer(infoSink, infoHeader);};
             StreamBuffer getWarnSink() const
-            {return StreamBuffer(name, warnSink, writeTime);};
+            {return StreamBuffer(warnSink, warnHeader);};
             StreamBuffer getErrorSink() const
-            {return StreamBuffer(name, errorSink, writeTime);};
+            {return StreamBuffer(errorSink, errorHeader);};
 
             unique_ptr<Sink> setDebugSink(unique_ptr<Sink> sink);
             unique_ptr<Sink> setInfoSink(unique_ptr<Sink> sink);
@@ -67,21 +68,26 @@ namespace slog
             };
             void setLogLevel(LogLevel level, unique_ptr<Sink> sink);
             void setLogLevel(string level, unique_ptr<Sink> sink);
-            void setWriteTime(bool v) {writeTime = v;};
-            bool getWriteTime() const {return writeTime;};
+            void setWriteTime(bool v);
+            void setWriteThreadId(bool v);
 
             const string &getName() const {return name;};
-
-            static string getTimeStamp();
+            Header &getDebugHeader() {return debugHeader;};
+            Header &getInfoHeader() {return infoHeader;};
+            Header &getWarnHeader() {return warnHeader;};
+            Header &getErrorHeader() {return errorHeader;};
 
             void dropLoggers();
         private:
             string name;
-            bool writeTime;
             Sink *debugSink;
             Sink *infoSink;
             Sink *warnSink;
             Sink *errorSink;
+            Header debugHeader;
+            Header infoHeader;
+            Header warnHeader;
+            Header errorHeader;
             map<string, Logger*> *instances;
             Logger(const string &name = "");
             ~Logger();

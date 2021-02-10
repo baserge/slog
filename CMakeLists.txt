@@ -24,6 +24,8 @@ set(LIB_TYPE SHARED) #SHARED STATIC MODULE
 # find dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_ROOT}/Modules ${CMAKE_SOURCE_DIR}/cmake)
 find_package(Klubok)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package (Threads)
 find_package(Doxygen)
 find_package(Sphinx)
 find_package(BoostTest)

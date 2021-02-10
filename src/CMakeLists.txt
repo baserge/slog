@@ -3,16 +3,16 @@
 # Licensed under GPLv3 or later, see the COPYING file.
 
 set(SRC Logger.cpp
-        StreamBuffer.cpp
         FileSink.cpp
         CoutThreadSink.cpp
         CerrThreadSink.cpp
         FileThreadSink.cpp
-        SharedFileThreadSink.cpp)
+        SharedFileThreadSink.cpp
+        Header.cpp)
 
 
 add_library(slog ${LIB_TYPE} ${SRC})
-set(LIBS  )
+set(LIBS  ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(slog ${LIBS})
 install(
         TARGETS slog

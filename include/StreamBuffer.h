@@ -4,6 +4,7 @@
 #ifndef STREAMBUFFER_H_D1JCYNSW
 #define STREAMBUFFER_H_D1JCYNSW
 #include "Sink.h"
+#include "Header.h"
 #include <sstream>
 #include <string>
 namespace slog
@@ -20,8 +21,8 @@ namespace slog
     class StreamBuffer
     {
         public:
-            StreamBuffer(const string &name, Sink *sink, bool writeTime) :
-                name(name), sink(sink), writeTime(writeTime), strm(nullptr) {};
+            StreamBuffer(Sink *sink, const Header &header) :
+                 sink(sink), header(header), strm(nullptr) {};
             ~StreamBuffer ()
             {
                 if (strm)
@@ -36,11 +37,9 @@ namespace slog
 
 
         private:
-            const string &name;
             Sink *sink;
-            bool writeTime;
+            const Header &header;
             ostringstream *strm;
-            void writeTimeStamp(ostringstream *strm);
     };
     template <class T>
     StreamBuffer &StreamBuffer::operator<<(const T &value)
@@ -50,11 +49,7 @@ namespace slog
             if (!strm)
             {
                 strm = new ostringstream;
-                if (!name.empty())
-                    *strm << "["<<name<<"]";
-                if (writeTime)
-                    writeTimeStamp(strm);
-                *strm << " ";
+                *strm << header;
             }
             *strm << value;
         }

@@ -29,7 +29,8 @@ namespace slog
         protected:
             // return mutex for sink locking, can be null if not used by sink
             virtual std::mutex* getMutex() = 0;
-            // return underlying stream for writing data
+            // return underlying stream for writing data, called with mutex
+            // locked (if present)
             virtual ostream &getStream() = 0;
     };
 
@@ -37,14 +38,13 @@ namespace slog
     inline Sink &Sink::operator<< (const T &value)
     {
         std::mutex *mutex = getMutex();
-        ostream &strm = getStream();
         if (mutex)
         {
             const std::lock_guard<std::mutex> lock(*mutex);
-            strm<<value<<endl;
+            getStream()<<value<<endl;
         }
         else
-            strm<<value<<endl;
+            getStream()<<value<<endl;
         return *this;
     }
 } //namespace slog

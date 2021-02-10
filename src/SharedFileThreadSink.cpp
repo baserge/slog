@@ -37,7 +37,6 @@ SharedFileThreadSink::~SharedFileThreadSink()
 // =========================================================================
 void SharedFileThreadSink::rollOver()
 {
-    const std::lock_guard<std::mutex> lock(mutex);
     if (file.tellp() > sizeLimit)
     {
         // iostream mess, there is not clean way of truncating files?

@@ -25,8 +25,8 @@ namespace slog
                                                                          sizeLimit);};
 
         protected:
-            virtual std::mutex* getMutex() {rollOver(); return &mutex;};
-            virtual ostream &getStream() {return file;};
+            virtual std::mutex* getMutex() {return &mutex;};
+            virtual ostream &getStream() {rollOver(); return file;};
 
         private:
             string fileName;

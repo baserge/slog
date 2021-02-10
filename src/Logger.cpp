@@ -128,7 +128,7 @@ Logger &Logger::getLogger(const string &name)
 {
     static map<string, Logger*> instances;
     static std::mutex mutex;
-    mutex.lock();
+    const std::lock_guard<std::mutex> lock(mutex);
     if (!instances.count("")) // first check root logger is present
     {
         instances[""] = new Logger();

@@ -1,9 +1,11 @@
 #ifndef CONFIG_H_IN_BAL4UNAN
 #define CONFIG_H_IN_BAL4UNAN
+#cmakedefine UNIX
+#define SLOG_VERSION_MAJOR @Slog_VERSION_MAJOR@
+#define SLOG_VERSION_MINOR @Slog_VERSION_MINOR@
+#define SLOG_VERSION_PATCH @Slog_VERSION_PATCH@
 namespace slog
 {
-#cmakedefine UNIX
-#cmakedefine HAVE_KLUBOK
-    const char * const version = "@VERSION@";
+    const char * const version = "@Slog_VERSION@";
 } //namespace slog
 #endif /* end of include guard: CONFIG_H_IN_BAL4UNAN */

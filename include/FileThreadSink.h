@@ -4,10 +4,9 @@
 #ifndef FILETHREADSINK_H_J26GGQKH
 #define FILETHREADSINK_H_J26GGQKH
 #include "config.h"
-#ifdef HAVE_KLUBOK
 #include "Sink.h"
-#include <Klubok/thread.h>
-#include <fstream> 
+#include <mutex>
+#include <fstream>
 #include <string>
 namespace slog
 {
@@ -15,6 +14,11 @@ namespace slog
     using std::ofstream;
     // =========================================================================
     /// @brief Thread safe file logger.
+    //
+    // This sinks has independent mutex per instance, that means that calls to
+    // the same sink are thread safe. But if the same file is used for different
+    // sinks or loggers, one should use sharedfile instead (which keeps references
+    // to an exernal mutex).
     // =========================================================================
     class FileThreadSink : public Sink
     {
@@ -26,12 +30,11 @@ namespace slog
         protected:
             virtual ostream &lockStream();
             virtual void releaseStream();
-    
+
         private:
             ofstream file;
-            klubok::Mutex mutex;
+            std::mutex mutex;
             string fileName;
     };
 } //namespace slog
-#endif
 #endif /* end of include guard: FILETHREADSINK_H_J26GGQKH */

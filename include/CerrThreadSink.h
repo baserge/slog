@@ -4,9 +4,8 @@
 #ifndef CERRTHREADSINK_H_J26GGQKH
 #define CERRTHREADSINK_H_J26GGQKH
 #include "config.h"
-#ifdef HAVE_KLUBOK
 #include "Sink.h"
-#include <Klubok/thread.h>
+#include <mutex>
 #include <iostream>
 namespace slog
 {
@@ -23,8 +22,7 @@ namespace slog
             virtual void releaseStream();
     
         private:
-            static klubok::Mutex mutex;
+            static std::mutex mutex;
     };
 } //namespace slog
-#endif
 #endif /* end of include guard: CERRTHREADSINK_H_J26GGQKH */

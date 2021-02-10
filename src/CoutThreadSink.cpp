@@ -2,10 +2,9 @@
 // Copyright 2013 Sergey Bozhenkov, boz at ipp.mpg.de
 // Licensed under GPLv3 or later, see the COPYING file.
 #include "CoutThreadSink.h"
-#ifdef HAVE_KLUBOK
 using namespace slog;
 
-klubok::Mutex CoutThreadSink::mutex = klubok::Mutex();
+std::mutex CoutThreadSink::mutex;
 
 ostream &CoutThreadSink::lockStream()
 {
@@ -16,4 +15,3 @@ void CoutThreadSink::releaseStream()
 {
     mutex.unlock();
 }
-#endif

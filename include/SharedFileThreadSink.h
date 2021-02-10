@@ -4,23 +4,21 @@
 #ifndef SHAREDFILETHREADSINK_H_J26GGQKH
 #define SHAREDFILETHREADSINK_H_J26GGQKH
 #include "config.h"
-#ifdef HAVE_KLUBOK
 #include "Sink.h"
-#include <Klubok/thread.h>
-#include <fstream> 
+#include <mutex>
+#include <fstream>
 #include <string>
 namespace slog
 {
     using std::string;
     using std::ofstream;
-    using klubok::Mutex;
     // =========================================================================
     /// @brief Thread safe file logger into a shared file.
     // =========================================================================
     class SharedFileThreadSink : public Sink
     {
         public:
-            SharedFileThreadSink (const string &fileName, Mutex &mutex,
+            SharedFileThreadSink (const string &fileName, std::mutex &mutex,
                                   long int sizeLimit = 1024*1024*1024);
             virtual ~SharedFileThreadSink ();
             virtual Sink *clone() const {return new SharedFileThreadSink(fileName,
@@ -30,15 +28,14 @@ namespace slog
         protected:
             virtual ostream &lockStream();
             virtual void releaseStream();
-    
+
         private:
             string fileName;
             ofstream file;
-            Mutex &mutex;
+            std::mutex &mutex;
             size_t sizeLimit;
             void rollOver();
             void checkFail();
     };
 } //namespace slog
-#endif
 #endif /* end of include guard: SHAREDFILETHREADSINK_H_J26GGQKH */

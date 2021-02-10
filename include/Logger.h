@@ -51,7 +51,7 @@ namespace slog
             {return StreamBuffer(name, warnSink, writeTime);};
             StreamBuffer getErrorSink() const
             {return StreamBuffer(name, errorSink, writeTime);};
-            
+
             unique_ptr<Sink> setDebugSink(unique_ptr<Sink> sink);
             unique_ptr<Sink> setInfoSink(unique_ptr<Sink> sink);
             unique_ptr<Sink> setWarnSink(unique_ptr<Sink> sink);

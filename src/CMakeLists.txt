@@ -12,12 +12,9 @@ set(SRC Logger.cpp
         SharedFileThreadSink.cpp
         SharedStringThreadSink.cpp)
 
-        
+
 add_library(slog ${LIB_TYPE} ${SRC})
 set(LIBS  )
-if (HAVE_KLUBOK)
-    set(LIBS ${LIBS} klubok)
-endif ()
 target_link_libraries(slog ${LIBS})
 install(
         TARGETS slog

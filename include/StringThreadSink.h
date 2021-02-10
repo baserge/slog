@@ -4,9 +4,8 @@
 #ifndef STRINGTHREADSINK_H_J26GGQKH
 #define STRINGTHREADSINK_H_J26GGQKH
 #include "config.h"
-#ifdef HAVE_KLUBOK
 #include "Sink.h"
-#include <Klubok/thread.h>
+#include <mutex>
 #include <sstream>
 #include <string>
 namespace slog
@@ -26,11 +25,10 @@ namespace slog
         protected:
             virtual ostream &lockStream();
             virtual void releaseStream();
-    
+
         private:
             ostringstream buffer;
-            klubok::Mutex mutex;
+            std::mutex mutex;
     };
 } //namespace slog
-#endif
 #endif /* end of include guard: STRINGTHREADSINK_H_J26GGQKH */

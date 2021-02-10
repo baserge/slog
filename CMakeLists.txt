@@ -1,22 +1,23 @@
 # CMakeLists.txt - cmake file, part of Slog.
 # Copyright 2013 Sergey Bozhenkov, boz at ipp.mpg.de
 # Licensed under GPLv3 or later, see the COPYING file.
-project(Slog)
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.0)
+project(Slog VERSION 0.2.0)
 # -- end project name, etc.
 
 # -- settings
 set(CMAKE_BUILD_TYPE Release) #defined DNDEBUG and O3
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_INSTALL_PREFIX "/usr/local")
-set(DEFS -O2 -march=native
-    -mfpmath=sse -msse -msse2 -mssse3 -msse4.1
-    -fno-math-errno -ffinite-math-only -fno-signed-zeros
-    -fno-trapping-math -fno-signaling-nans
-    -fomit-frame-pointer -falign-labels=1 -falign-jumps=1
-    -funroll-loops  -finline-functions -Wall -Wextra
-    -Wconversion -Wpointer-arith -Wcast-qual
-    -g -std=c++11)#0 -s)
-set(VERSION 0.1)
+#set(DEFS -O2 -march=native
+    #-mfpmath=sse -msse -msse2 -mssse3 -msse4.1
+    #-fno-math-errno -ffinite-math-only -fno-signed-zeros
+    #-fno-trapping-math -fno-signaling-nans
+    #-fomit-frame-pointer -falign-labels=1 -falign-jumps=1
+    #-funroll-loops  -finline-functions -Wall -Wextra
+    #-Wconversion -Wpointer-arith -Wcast-qual
+    #-g)#0 -s)
 set(LIB_TYPE SHARED) #SHARED STATIC MODULE
 # -- end settings
 
@@ -31,7 +32,7 @@ if (Klubok_FOUND)
     set(HAVE_KLUBOK 1)
 else ()
     message(WARNING
-             " Klubok not found. Multithreading will not be built.")
+             " Klubok not found. Tests will not be built.")
 endif ()
 # -- end find dependencies
 
@@ -54,7 +55,7 @@ endif()
 include_directories(${CMAKE_BINARY_DIR} ./include)
 include(include/CMakeLists.txt)
 add_subdirectory(./src lib)
-if (BoostTest_FOUND)
+if (BoostTest_FOUND AND HAVE_KLUBOK)
     add_subdirectory(./tests)
 else ()
     message(WARNING " BoostTest was not found, tests will not be built.")

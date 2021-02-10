@@ -6,9 +6,7 @@
 #include "config.h"
 #include <ostream>
 #include <string>
-#ifdef HAVE_KLUBOK
-#include <pthread.h>
-#endif
+#include <thread>
 
 namespace slog
 {
@@ -47,15 +45,12 @@ namespace slog
         ostream &strm = lockStream();
         if (!prefix.empty())
             strm<<"["<<prefix<<"]";
-#ifdef HAVE_KLUBOK
-        strm<<"[TH"<<std::hex<<pthread_self()<<"]";
-#endif
+        strm<<"[TH"<<std::hex<<std::this_thread::get_id()<<"]";
         strm << value;
         strm<<endl;
         releaseStream();
         return *this;
     }
-    
 } //namespace slog
 
 

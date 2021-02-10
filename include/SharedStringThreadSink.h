@@ -4,36 +4,33 @@
 #ifndef SHAREDSTRINGTHREADSINK_H_HBOURB8S
 #define SHAREDSTRINGTHREADSINK_H_HBOURB8S
 #include "config.h"
-#ifdef HAVE_KLUBOK
 #include "Sink.h"
-#include <Klubok/thread.h>
+#include <mutex>
 #include <sstream>
 #include <string>
 namespace slog
 {
     using std::ostringstream;
     using std::string;
-    using klubok::Mutex;
     // =========================================================================
     /// @brief String buffer - messages into common thread safe buffer.
     // =========================================================================
     class SharedStringThreadSink : public Sink
     {
         public:
-            SharedStringThreadSink(ostringstream &buffer, Mutex &mutex);
+            SharedStringThreadSink(ostringstream &buffer, std::mutex &mutex);
             const ostringstream &getBuffer() const {return buffer;};
             string getString() const {return buffer.str();};
 
             virtual Sink *clone() const {return new SharedStringThreadSink(buffer, mutex);};
-    
+
         protected:
             virtual ostream &lockStream();
             virtual void releaseStream();
 
         private:
             ostringstream &buffer;
-            Mutex &mutex;
+            std::mutex &mutex;
     };
 } //namespace slog
-#endif
 #endif /* end of include guard: SHAREDSTRINGTHREADSINK_H_HBOURB8S */

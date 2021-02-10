@@ -21,10 +21,8 @@
 #include <iostream>
 #include <algorithm>
 #include <cstdio>
-#ifdef HAVE_KLUBOK
 #include <Klubok/pool.h>
 using namespace klubok;
-#endif
 #include <cstdlib>
 #ifdef UNIX
 #include <unistd.h>
@@ -202,7 +200,6 @@ BOOST_AUTO_TEST_CASE(strbuf_shared)
     BOOST_REQUIRE_EQUAL(num, 4);
 }
 
-#ifdef HAVE_KLUBOK
 class DebugJob : public AbstractJob
 {
     virtual void execute()
@@ -311,7 +308,7 @@ BOOST_AUTO_TEST_CASE(strbuf_shared_threaded)
 {
     srand(0);
     ostringstream buf;
-    Mutex m;
+    std::mutex m;
     Logger &logger = Logger::getLogger();
     logger.setDebugSink(unique_ptr<Sink>(new 
                                        SharedStringThreadSink(buf, m)
@@ -343,7 +340,7 @@ BOOST_AUTO_TEST_CASE(fileshared_threaded)
 {
     srand(0);
     remove("shared_threaded.log");
-    Mutex m;
+    std::mutex m;
     Logger &logger = Logger::getLogger();
     logger.setDebugSink(unique_ptr<Sink>(new 
                                        SharedFileThreadSink(
@@ -387,7 +384,7 @@ BOOST_AUTO_TEST_CASE(fileshared_threaded_trunc)
 {
     srand(0);
     remove("shared_threaded.log");
-    Mutex m;
+    std::mutex m;
     Logger &logger = Logger::getLogger();
     logger.setDebugSink(unique_ptr<Sink>(new 
                                        SharedFileThreadSink(
@@ -425,6 +422,5 @@ BOOST_AUTO_TEST_CASE(fileshared_threaded_trunc)
     file.seekg(0, ios_base::end);
     BOOST_REQUIRE(file.tellg() <= 1024);
 }
-#endif
 
 BOOST_AUTO_TEST_SUITE_END()

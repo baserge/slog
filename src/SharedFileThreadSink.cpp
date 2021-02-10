@@ -3,7 +3,6 @@
 // Licensed under GPLv3 or later, see the COPYING file.
 #include "SharedFileThreadSink.h"
 #include <sstream>
-#ifdef HAVE_KLUBOK
 using namespace slog;
 using namespace std;
 
@@ -20,8 +19,8 @@ using namespace std;
 ///                  reached the file is truncated.
 // =========================================================================
 SharedFileThreadSink::SharedFileThreadSink(const string &fileName,
-                                          Mutex &mutex,
-                                          long int sizeLimit) 
+                                          std::mutex &mutex,
+                                          long int sizeLimit)
     :  fileName(fileName), mutex(mutex), sizeLimit(sizeLimit)
 {
     file.open(fileName.c_str(), ios::app);
@@ -73,4 +72,3 @@ void SharedFileThreadSink::checkFail()
         throw invalid_argument(strm.str().c_str());
     }
 }
-#endif

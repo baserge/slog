@@ -3,7 +3,6 @@
 // Licensed under GPLv3 or later, see the COPYING file.
 #include "FileThreadSink.h"
 #include <sstream>
-#ifdef HAVE_KLUBOK
 using namespace slog;
 using namespace std;
 
@@ -31,4 +30,3 @@ void FileThreadSink::releaseStream()
 {
     mutex.unlock();
 }
-#endif

@@ -2,10 +2,9 @@
 // Copyright 2013 Sergey Bozhenkov, boz at ipp.mpg.de
 // Licensed under GPLv3 or later, see the COPYING file.
 #include "SharedStringThreadSink.h"
-#ifdef HAVE_KLUBOK
 using namespace slog;
 SharedStringThreadSink::SharedStringThreadSink(ostringstream &buffer,
-                                               Mutex &mutex) :
+                                               std::mutex &mutex) :
     buffer(buffer), mutex(mutex)
 {}
 
@@ -19,4 +18,3 @@ void SharedStringThreadSink::releaseStream()
 {
     mutex.unlock();
 }
-#endif  /* end of HAVE_KLUBOK */

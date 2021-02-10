@@ -3,13 +3,18 @@ set(DOC_FILES overview.rst)
 configure_file(./doxygen.conf.in ./doxygen.conf)
 configure_file(./conf.py.in ./conf.py)
 
+add_custom_target(html-dir
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/html)
+
+add_custom_target(pdf-dir
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/pdf)
 
 add_custom_target(
                 doc-doxy
                 COMMAND ${DOXYGEN_EXECUTABLE}
                     ${CMAKE_CURRENT_BINARY_DIR}/doxygen.conf
                   )
-add_dependencies(doc-doxy slog)
+add_dependencies(doc-doxy slog html-dir pdf-dir)
 add_custom_target(
                 doc-html
                 COMMAND ${SPHINX} -b html

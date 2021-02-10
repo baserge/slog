@@ -155,6 +155,7 @@ void Logger::dropLoggers()
 {
     if (!instances)
         return;
+    //std::cout<<"old size"<<instances->size()<<std::endl;
     for(auto it = instances->begin(); it != instances->end(); )
     {
         if (it->first != "")  // first is key
@@ -165,6 +166,7 @@ void Logger::dropLoggers()
         else
             ++it;
     }
+    //std::cout<<"new size"<<instances->size()<<std::endl;
 }
 
 typedef unique_ptr<Sink>(Logger::*func)(unique_ptr<Sink>);

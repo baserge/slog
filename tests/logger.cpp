@@ -148,17 +148,22 @@ BOOST_AUTO_TEST_CASE(named_loggers)
     l1.setDebugSink(unique_ptr<Sink>(new CoutSink));
     Logger &l2 = Logger::getLogger("");
     BOOST_REQUIRE_EQUAL(&l1, &l2);
+    l2.getDebugSink()<<"test";
     Logger &l3 = Logger::getLogger("test1");
     Logger &l4 = Logger::getLogger("test2");
+    l3.setWriteTime(true);
+    l3.getDebugSink()<<"test";
+    l4.setWriteTime(true);
+    l4.getDebugSink()<<"test 4";
     BOOST_REQUIRE(&l1 != &l3);
     BOOST_REQUIRE(&l3 != &l4);
+    BOOST_REQUIRE(l3.getDebugHeader().getWriteTime() == true);
+    BOOST_REQUIRE(l4.getDebugHeader().getWriteTime() == true);
     l1.dropLoggers();
     Logger &l31 = Logger::getLogger("test1");
     Logger &l41 = Logger::getLogger("test2");
-    BOOST_REQUIRE(&l31 != &l3);
-    BOOST_REQUIRE(&l41 != &l4);
-    Logger &l32 = Logger::getLogger("test1");
-    BOOST_REQUIRE(&l31 == &l32);
+    BOOST_REQUIRE(l31.getDebugHeader().getWriteTime() == false);
+    BOOST_REQUIRE(l41.getDebugHeader().getWriteTime() == false);
 }
 
 BOOST_AUTO_TEST_CASE(strbuf_shared)
@@ -173,27 +178,9 @@ BOOST_AUTO_TEST_CASE(strbuf_shared)
     logger.getInfoSink()<<"my message "<<2;
     logger.getWarnSink()<<"my message "<<3;
     logger.getErrorSink()<<"my message "<<4;
-    istringstream strm(((SharedStringSink*)logger.getDebugSink().getSink())->getString());
+    istringstream strm(buf.str());
     std::string line;
     int num = 0;
-    while (std::getline(strm, line))
-        num++;
-    BOOST_REQUIRE_EQUAL(num, 4);
-    strm.clear();
-    strm.str(((SharedStringSink*)logger.getInfoSink().getSink())->getString());
-    num = 0;
-    while (std::getline(strm, line))
-        num++;
-    BOOST_REQUIRE_EQUAL(num, 4);
-    strm.clear();
-    strm.str(((SharedStringSink*)logger.getWarnSink().getSink())->getString());
-    num = 0;
-    while (std::getline(strm, line))
-        num++;
-    BOOST_REQUIRE_EQUAL(num, 4);
-    strm.clear();
-    strm.str(((SharedStringSink*)logger.getErrorSink().getSink())->getString());
-    num = 0;
     while (std::getline(strm, line))
         num++;
     BOOST_REQUIRE_EQUAL(num, 4);

@@ -22,7 +22,14 @@ namespace slog
     {
         public:
             StreamBuffer(Sink *sink, const Header &header) :
-                 sink(sink), header(header), strm(nullptr) {};
+                 sink(sink), header(header), strm(nullptr)
+            {
+                if (sink)
+                {
+                    strm = new ostringstream;
+                    *strm << header;
+                }
+            };
             ~StreamBuffer ()
             {
                 if (strm)
@@ -44,15 +51,8 @@ namespace slog
     template <class T>
     StreamBuffer &StreamBuffer::operator<<(const T &value)
     {
-        if (sink)
-        {
-            if (!strm)
-            {
-                strm = new ostringstream;
-                *strm << header;
-            }
+        if (strm)
             *strm << value;
-        }
         return *this;
     }
 } //namespace slog

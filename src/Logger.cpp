@@ -139,7 +139,6 @@ Logger &Logger::getLogger(const string &name)
         instances[name]->setInstancesMap(&instances);
     }
     Logger *inst = instances[name];
-    mutex.unlock();
     return *inst;
 }
 

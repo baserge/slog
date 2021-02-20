@@ -3,6 +3,12 @@
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 #include <boost/test/floating_point_comparison.hpp>
+
+#include <thread>
+#include <vector>
+#include <chrono>
+#include <algorithm>
+
 #include "config.h"
 #include "Logger.h"
 #include "CoutSink.h"
@@ -16,16 +22,6 @@
 #include "StringThreadSink.h"
 #include "FileThreadSink.h"
 #include "SharedFileThreadSink.h"
-#include <iostream>
-#include <algorithm>
-#include <cstdio>
-#include <Klubok/pool.h>
-using namespace klubok;
-#include <cstdlib>
-#ifdef UNIX
-#include <unistd.h>
-#endif
-#include <vector>
 
 using namespace std;
 using namespace slog;
@@ -184,116 +180,104 @@ BOOST_AUTO_TEST_CASE(strbuf_shared)
     BOOST_REQUIRE_EQUAL(num, 4);
 }
 
-class DebugJob : public AbstractJob
+void printDebug()
 {
-    virtual void execute()
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    for (size_t i = 0; i < 30; i++)
     {
-        for (size_t i = 0; i < 10; i++)
-        {
-            Logger::getLogger().getDebugSink()<<"my message "<<i;
-            float t = rand();
-            t /= float(RAND_MAX);
-#ifdef UNIX
-            usleep(t*10.1);
-#endif
-        }
-    
+        float t = rand();
+        t /= float(RAND_MAX);
+        Logger::getLogger().getDebugSink()<<"my message "<<i<<", sleep "<<int(t*3)<<" ms";
+        std::this_thread::sleep_for(std::chrono::milliseconds(int(t*3)));
     }
-};
-class InfoJob : public AbstractJob
+}
+
+void printInfo()
 {
-    virtual void execute()
+    std::this_thread::sleep_for(std::chrono::milliseconds(70));
+    for (size_t i = 0; i < 20; i++)
     {
-        for (size_t i = 0; i < 20; i++)
-        {
-            Logger::getLogger().getInfoSink()<<"my message "<< i;
-            float t = rand();
-            t /= float(RAND_MAX);
-#ifdef UNIX
-            usleep(t*3.0);
-#endif
-        }
-    
+        float t = rand();
+        t /= float(RAND_MAX);
+        Logger::getLogger().getInfoSink()<<"my message "<<i<<", sleep "<<int(t*7)<<" ms";
+        std::this_thread::sleep_for(std::chrono::milliseconds(int(t*7)));
     }
-};
-class WarnJob : public AbstractJob
+}
+
+void printWarn()
 {
-    virtual void execute()
+    std::this_thread::sleep_for(std::chrono::milliseconds(110));
+    for (size_t i = 0; i < 20; i++)
     {
-        for (size_t i = 0; i < 20; i++)
-        {
-            Logger::getLogger().getWarnSink()<<"my message "<<i;
-            float t = rand();
-            t /= float(RAND_MAX);
-#ifdef UNIX
-            usleep(t*1.0);
-#endif
-        }
-    
+        float t = rand();
+        t /= float(RAND_MAX);
+        Logger::getLogger().getWarnSink()<<"my message "<<i<<", sleep "<<int(t*6)<<" ms";
+        std::this_thread::sleep_for(std::chrono::milliseconds(int(t*6)));
     }
-};
-class ErrorJob : public AbstractJob
+}
+
+void printError()
 {
-    virtual void execute()
+    std::this_thread::sleep_for(std::chrono::milliseconds(80));
+    for (size_t i = 0; i < 15; i++)
     {
-        for (size_t i = 0; i < 20; i++)
-        {
-            Logger::getLogger().getErrorSink()<<"my message "<<i;
-            float t = rand();
-            t /= float(RAND_MAX);
-#ifdef UNIX
-            usleep(t*2.0);
-#endif
-        }
-    
+        float t = rand();
+        t /= float(RAND_MAX);
+        Logger::getLogger().getErrorSink()<<"my message "<<i<<", sleep "<<int(t*5)<<" ms";
+        std::this_thread::sleep_for(std::chrono::milliseconds(int(t*5)));
     }
-};
+}
+
 BOOST_AUTO_TEST_CASE(coutThread)
 {
     srand(0);
     Logger &logger = Logger::getLogger();
+    logger.setWriteThreadId(true);
     logger.setDebugSink(unique_ptr<Sink>(new CoutThreadSink));
     logger.setInfoSink(unique_ptr<Sink>(new CoutThreadSink));
     logger.setWarnSink(unique_ptr<Sink>(new CoutThreadSink));
     logger.setErrorSink(unique_ptr<Sink>(new CoutThreadSink));
-    vector<AbstractJob*> jobs;
+    std::vector<std::thread> jobs;
     for (size_t i = 0; i < 4; i++)
     {
-        jobs.push_back(new DebugJob);
-        jobs.push_back(new InfoJob);
-        jobs.push_back(new WarnJob);
-        jobs.push_back(new ErrorJob);
+        jobs.push_back(std::thread(printDebug));
+        jobs.push_back(std::thread(printInfo));
+        jobs.push_back(std::thread(printWarn));
+        jobs.push_back(std::thread(printError));
     }
-    ThreadPool pool(4*4);
-    pool.addJob(jobs);
-    pool.waitUntilEmpty();
+    for (auto &v : jobs)
+        v.join();
 }
+
 BOOST_AUTO_TEST_CASE(cerrThread)
 {
     srand(0);
     Logger &logger = Logger::getLogger();
+    logger.setWriteThreadId(true);
     logger.setDebugSink(unique_ptr<Sink>(new CerrThreadSink));
     logger.setInfoSink(unique_ptr<Sink>(new CerrThreadSink));
     logger.setWarnSink(unique_ptr<Sink>(new CerrThreadSink));
     logger.setErrorSink(unique_ptr<Sink>(new CerrThreadSink));
-    vector<AbstractJob*> jobs;
+
+    std::vector<std::thread> jobs;
     for (size_t i = 0; i < 4; i++)
     {
-        jobs.push_back(new DebugJob);
-        jobs.push_back(new InfoJob);
-        jobs.push_back(new WarnJob);
-        jobs.push_back(new ErrorJob);
+        jobs.push_back(std::thread(printDebug));
+        jobs.push_back(std::thread(printInfo));
+        jobs.push_back(std::thread(printWarn));
+        jobs.push_back(std::thread(printError));
     }
-    ThreadPool pool(4*4);
-    pool.addJob(jobs);
-    pool.waitUntilEmpty();
+    for (auto &v : jobs)
+        v.join();
 }
+
 BOOST_AUTO_TEST_CASE(strbuf_shared_threaded)
 {
     srand(0);
     ostringstream buf;
     std::mutex m;
     Logger &logger = Logger::getLogger();
+    logger.setWriteThreadId(true);
     logger.setDebugSink(unique_ptr<Sink>(new 
                                        SharedStringThreadSink(buf, m)
                                        ));
@@ -306,26 +290,28 @@ BOOST_AUTO_TEST_CASE(strbuf_shared_threaded)
     logger.setErrorSink(unique_ptr<Sink>(new 
                                        SharedStringThreadSink(buf, m)
                                        ));
-    vector<AbstractJob*> jobs;
+    std::vector<std::thread> jobs;
     for (size_t i = 0; i < 4; i++)
     {
-        jobs.push_back(new DebugJob);
-        jobs.push_back(new InfoJob);
-        jobs.push_back(new WarnJob);
-        jobs.push_back(new ErrorJob);
+        jobs.push_back(std::thread(printDebug));
+        jobs.push_back(std::thread(printInfo));
+        jobs.push_back(std::thread(printWarn));
+        jobs.push_back(std::thread(printError));
     }
-    ThreadPool pool(4*4);
-    pool.addJob(jobs);
-    pool.waitUntilEmpty();
+    for (auto &v : jobs)
+        v.join();
     string s = buf.str();
-    BOOST_REQUIRE_EQUAL(std::count(s.begin(), s.end(), '\n'), 70*4);
+    BOOST_REQUIRE_EQUAL(std::count(s.begin(), s.end(), '\n'), 85*4);
 }
+
 BOOST_AUTO_TEST_CASE(fileshared_threaded)
 {
     srand(0);
     remove("shared_threaded.log");
     std::mutex m;
     Logger &logger = Logger::getLogger();
+    logger.setWriteThreadId(true);
+    logger.setWriteTime(true);
     logger.setDebugSink(unique_ptr<Sink>(new 
                                        SharedFileThreadSink(
                                                         "shared_threaded.log",
@@ -346,65 +332,65 @@ BOOST_AUTO_TEST_CASE(fileshared_threaded)
                                                         "shared_threaded.log",
                                                         m)
                                        ));
-    vector<AbstractJob*> jobs;
+    std::vector<std::thread> jobs;
     for (size_t i = 0; i < 4; i++)
     {
-        jobs.push_back(new DebugJob);
-        jobs.push_back(new InfoJob);
-        jobs.push_back(new WarnJob);
-        jobs.push_back(new ErrorJob);
+        jobs.push_back(std::thread(printDebug));
+        jobs.push_back(std::thread(printInfo));
+        jobs.push_back(std::thread(printWarn));
+        jobs.push_back(std::thread(printError));
     }
-    ThreadPool pool(4*4);
-    pool.addJob(jobs);
-    pool.waitUntilEmpty();
+    for (auto &v : jobs)
+        v.join();
     std::string line;
     std::ifstream file("shared_threaded.log");
     int num = 0;
     while (std::getline(file, line))
         num++;
-    BOOST_REQUIRE_EQUAL(num, 70*4);
+    BOOST_REQUIRE_EQUAL(num, 85*4);
 }
+
 BOOST_AUTO_TEST_CASE(fileshared_threaded_trunc)
 {
     srand(0);
-    remove("shared_threaded.log");
+    remove("shared_threaded_trunc.log");
     std::mutex m;
     Logger &logger = Logger::getLogger();
+    logger.setWriteThreadId(true);
     logger.setDebugSink(unique_ptr<Sink>(new 
                                        SharedFileThreadSink(
-                                                        "shared_threaded.log",
+                                                        "shared_threaded_trunc.log",
                                                         m, 1024)
                                        ));
     logger.setInfoSink(unique_ptr<Sink>(new 
                                       SharedFileThreadSink(
-                                                       "shared_threaded.log",
+                                                       "shared_threaded_trunc.log",
                                                        m, 1024)
                                       ));
     logger.setWarnSink(unique_ptr<Sink>(new 
                                       SharedFileThreadSink(
-                                                       "shared_threaded.log",
+                                                       "shared_threaded_trunc.log",
                                                        m, 1024)
                                       ));
     logger.setErrorSink(unique_ptr<Sink>(new 
                                        SharedFileThreadSink(
-                                                        "shared_threaded.log",
+                                                        "shared_threaded_trunc.log",
                                                         m, 1024)
                                        ));
-    vector<AbstractJob*> jobs;
+    std::vector<std::thread> jobs;
     for (size_t i = 0; i < 4; i++)
     {
-        jobs.push_back(new DebugJob);
-        jobs.push_back(new InfoJob);
-        jobs.push_back(new WarnJob);
-        jobs.push_back(new ErrorJob);
+        jobs.push_back(std::thread(printDebug));
+        jobs.push_back(std::thread(printInfo));
+        jobs.push_back(std::thread(printWarn));
+        jobs.push_back(std::thread(printError));
     }
-    ThreadPool pool(4*4);
-    pool.addJob(jobs);
-    pool.waitUntilEmpty();
+    for (auto &v : jobs)
+        v.join();
     std::string line;
-    std::ifstream file("shared_threaded.log");
+    std::ifstream file("shared_threaded_trunc.log");
     file.seekg(0, ios_base::end);
-    BOOST_REQUIRE(file.tellg() <= 1024);
+    BOOST_REQUIRE(file.tellg() <= 1024);  // it is a bit of a race and can fail sometimes
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -21,19 +21,11 @@ set(LIB_TYPE SHARED) #SHARED STATIC MODULE
 
 # find dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_ROOT}/Modules ${CMAKE_SOURCE_DIR}/cmake)
-find_package(Klubok)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package (Threads)
 find_package(Doxygen)
 find_package(Sphinx)
 find_package(BoostTest)
-include(cmake/ProcessorCounter.cmake)
-if (Klubok_FOUND)
-    set(HAVE_KLUBOK 1)
-else ()
-    message(WARNING
-             " Klubok not found. Tests will not be built.")
-endif ()
 # -- end find dependencies
 
 # -- do configure file
@@ -41,21 +33,21 @@ configure_file(./config.h.in ./config.h)
 # -- end do configure file
 
 # -- compiler flags
-if(CMAKE_COMPILER_IS_GNUCXX)
-    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set(DEFS ${DEFS} -m64)
-    endif()
-    add_definitions(${DEFS})
-    set (CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_INIT} ${DEFS})
-    set (CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS_INIT} ${DEFS})
-endif()
+#if(CMAKE_COMPILER_IS_GNUCXX)
+    #if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        #set(DEFS ${DEFS} -m64)
+    #endif()
+    #add_definitions(${DEFS})
+    #set (CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS_INIT} ${DEFS})
+    #set (CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS_INIT} ${DEFS})
+#endif()
 # -- end compiler flags
 
 # -- add sub-projects
 include_directories(${CMAKE_BINARY_DIR} ./include)
 include(include/CMakeLists.txt)
 add_subdirectory(./src lib)
-if (BoostTest_FOUND AND HAVE_KLUBOK)
+if (BoostTest_FOUND)
     add_subdirectory(./tests)
 else ()
     message(WARNING " BoostTest was not found, tests will not be built.")

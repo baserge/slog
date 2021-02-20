@@ -23,8 +23,6 @@ set(LIB_TYPE SHARED) #SHARED STATIC MODULE
 set(CMAKE_MODULE_PATH ${CMAKE_ROOT}/Modules ${CMAKE_SOURCE_DIR}/cmake)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package (Threads)
-find_package(Doxygen)
-find_package(Sphinx)
 find_package(BoostTest)
 # -- end find dependencies
 
@@ -51,10 +49,4 @@ if (BoostTest_FOUND)
     add_subdirectory(./tests)
 else ()
     message(WARNING " BoostTest was not found, tests will not be built.")
-endif ()
-if (DOXYGEN_FOUND AND Sphinx_FOUND)
-   add_subdirectory(./doc doc)
-else ()
-   message(WARNING
-            " Doxygen or Sphinx not found. Documentation will not be built.")
 endif ()
